@@ -87,7 +87,7 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
     final newTime = await showTimePicker(
       context: context, 
-      initialTime: selectedTime ?? initialTime,
+      initialTime: selectedTime,
     );
     if (newTime == null) return;
 

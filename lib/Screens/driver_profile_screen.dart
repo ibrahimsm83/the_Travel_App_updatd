@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
@@ -9,6 +10,7 @@ import 'package:travelapp/Screens/login_user_screen.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
+import 'package:travelapp/services/local_push_notification.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({Key? key}) : super(key: key);
@@ -31,6 +33,51 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   void initState() {
     //getCurrentLocation();
     getStringValuesSF();
+    // 1. This method call when app in terminated state and you get a notification
+    // when you click on notification app open from terminated state and you can get notification data in this method
+
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        print("FirebaseMessaging.instance.getInitialMessage");
+        if (message != null) {
+          print("New Notification");
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
+        }
+      },
+    );
+    // 2. This method only call when App in forground it mean app must be opened
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        print("FirebaseMessaging.onMessage.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data11 ${message.data}");
+          LocalNotificationService.createanddisplaynotification(message);
+        }
+      },
+    );
+
+    // 3. This method only call when App in background and not terminated(not closed)
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        print("FirebaseMessaging.onMessageOpenedApp.listen");
+        if (message.notification != null) {
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message.data22 ${message.data['_id']}");
+        }
+      },
+    );
+
     super.initState();
   }
 
@@ -76,12 +123,14 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         child: new Drawer(
           child: StreamBuilder<QuerySnapshot>(
             stream: Database.readDriverData(),
-            builder: (context, snapshot) {
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError && snapshot.data == null) {
                 return Text('Something went wrong');
               } else if (snapshot.hasData || snapshot.data != null) {
+                print(snapshot.data?.docs.length);
                 return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
+                    itemCount: snapshot.data?.docs.length,
                     itemBuilder: (context, index) {
                       if (snapshot.data!.docs[index]['Email'] == eml) {
                         return Column(
@@ -104,11 +153,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                   ),
                                   Text(
                                     snapshot.data!.docs[index]['name'],
-                                    style: TextStyle(fontFamily: 'Montserrat',color: Colors.white),
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.white),
                                   ),
                                   Text(
                                     snapshot.data!.docs[index]['Email'],
-                                    style: TextStyle(fontFamily: 'Montserrat',color: Colors.white),
+                                    style: TextStyle(
+                                        fontFamily: 'Montserrat',
+                                        color: Colors.white),
                                   ),
                                   SizedBox(
                                     height: 10.0,
@@ -120,42 +173,47 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                               child: Column(
                                 children: [
                                   new ListTile(
-                                    title: new Text('Profile',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                      ),),
-                                    trailing: new Icon(Icons.account_box),
-                                  ),
-                                  new ListTile(
-                                    title: new Text('Help',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                      ),),
-                                    trailing: new Icon(Icons.help),
-                                  ),
-                                  new ListTile(
-                                      title: new Text('Sign out',
+                                    title: new Text(
+                                      'Profile',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Montserrat',
-                                      ),),
-                                      trailing: new Icon(Icons.close),
-                                      //onTap: ()=>Navigator.of(context).pop(),
-                                      onTap: () async {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        await //prefs?.clear();
-                                            prefs.clear();
-                                        await prefs.remove('driveremail');
-                                        Navigator.of(context).pushReplacement(
-                                            MaterialPageRoute(
-                                                builder:
-                                                    (BuildContext context) =>
-                                                        MainScreen()));
-                                      })
+                                      ),
+                                    ),
+                                    trailing: new Icon(Icons.account_box),
+                                  ),
+                                  new ListTile(
+                                    title: new Text(
+                                      'Help',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                    trailing: new Icon(Icons.help),
+                                  ),
+                                  new ListTile(
+                                    title: new Text(
+                                      'Sign out',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                    trailing: new Icon(Icons.close),
+                                    //onTap: ()=>Navigator.of(context).pop(),
+                                    onTap: () async {
+                                      SharedPreferences prefs =
+                                          await SharedPreferences.getInstance();
+                                      await //prefs?.clear();
+                                          prefs.clear();
+                                      await prefs.remove('driveremail');
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (BuildContext context) =>
+                                                  MainScreen()));
+                                    },
+                                  )
                                 ],
                               ),
                             ),
@@ -200,10 +258,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   TextSpan(
                       text: 'Travel App ',
                       style: TextStyle(
-                          fontSize: 30.0,
+                        fontSize: 30.0,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
-                        fontFamily: 'Montserrat',))
+                        fontFamily: 'Montserrat',
+                      ))
                 ])),
             SizedBox(height: 150.0),
             Container(
@@ -216,10 +275,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   Text(
                     "Driver",
                     style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontFamily: 'Montserrat',),
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
                   SizedBox(
                     width: 20,
@@ -311,21 +371,19 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 child: ElevatedButton(
                   child: Text(
                     "Find Trips",
-                    style: TextStyle(fontSize: 20.0,
-                        fontWeight: FontWeight.w300,
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',),
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.white,
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                          DriverMainPage()
-                      ),
+                      MaterialPageRoute(builder: (context) => DriverMainPage()),
                     );
                   },
-                  
                   style: ElevatedButton.styleFrom(
                     primary: Colors.grey[800],
                     textStyle:

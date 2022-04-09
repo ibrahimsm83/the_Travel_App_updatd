@@ -19,8 +19,7 @@ class Database {
       int? seats,
       String? servicetype,
       double? latitude,
-      double? longitude
-      }) async {
+      double? longitude}) async {
     // DocumentReference documentReferencer =
     // _mainCollection.doc(phono).collection('Data').doc();
     DocumentReference documentReferencer = _mainCollection.doc(phono);
@@ -53,8 +52,7 @@ class Database {
       num? totalPrice,
       DateTime? dateTime,
       String? email,
-      bool flag = false
-      }) async {
+      bool flag = false}) async {
     DocumentReference documentReferencer =
         _firestore.collection('DailyRides').doc(email);
     Map<String, dynamic> data = <String, dynamic>{
@@ -63,7 +61,7 @@ class Database {
       "totalDistance": totalDistance,
       "totalPrice": totalPrice,
       "dateTime": dateTime,
-      "flag" : flag
+      "flag": flag
     };
 //add data
     await documentReferencer
@@ -81,8 +79,7 @@ class Database {
       num? totalPrice,
       DateTime? dateTime,
       String? email,
-      num? nopassengers
-      }) async {
+      num? nopassengers}) async {
     DocumentReference documentReferencer =
         _firestore.collection('Sharing').doc(email);
     Map<String, dynamic> data = <String, dynamic>{
@@ -91,7 +88,7 @@ class Database {
       "totalDistance": totalDistance,
       "totalPrice": totalPrice,
       "dateTime": dateTime,
-      "passengers" : nopassengers
+      "passengers": nopassengers
     };
 //add data
     await documentReferencer
@@ -112,8 +109,7 @@ class Database {
       String? comment,
       String? vehicleType,
       String? email,
-      String? pickuptime
-      }) async {
+      String? pickuptime}) async {
     var documentReferencer = _firestore
         .collection('InterCity')
         .doc(email)

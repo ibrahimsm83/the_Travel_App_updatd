@@ -51,13 +51,14 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
   String getText() {
     if (selectedTime == null) {
       return "Select Time";
-    }
-    else {
-      String selTime =
-      selectedTime.hour.toString().padLeft(2, '0') + ':' + selectedTime.minute.toString().padLeft(2, '0') + ':00';
+    } else {
+      String selTime = selectedTime.hour.toString().padLeft(2, '0') +
+          ':' +
+          selectedTime.minute.toString().padLeft(2, '0') +
+          ':00';
       time = DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime));
       return time; //DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime));
-  //print(DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime)));
+      //print(DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime)));
       // final hours = selectedTime.hour.toString().padLeft(2, '0');
       // final minutes = selectedTime.minute.toString().padLeft(2, '0');
       // return '$hours:$minutes';
@@ -84,8 +85,8 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
   Future pickTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
     final newTime = await showTimePicker(
-      context: context, 
-      initialTime: selectedTime ?? initialTime,
+      context: context,
+      initialTime: selectedTime,
     );
     if (newTime == null) return;
 
@@ -509,30 +510,30 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
                                         _originLatitude,
                                         _originLongitude,
                                         _destLatitude,
-                                        _destLongitude
-                                      );
+                                        _destLongitude);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 DrawPolyLine(
-                                                  originLatitude:
-                                                      _originLatitude,
-                                                  originLongitude:
-                                                      _originLongitude,
-                                                  destLatitude: _destLatitude,
-                                                  destLongitude: _destLongitude,
-                                                  totlaDistance: totalDistance,
-                                                  pickupLocation:
-                                                      _pickupController.text,
-                                                  dropOffLocation:
-                                                      _dropoffController.text,
-                                                  comment: _comments.text,
-                                                  pickupDateTime:
-                                                      _dateController.text,
-                                                  vehicleType: vehicle1,
-                                                  pickuptime: time
-                                                )));
+                                                    originLatitude:
+                                                        _originLatitude,
+                                                    originLongitude:
+                                                        _originLongitude,
+                                                    destLatitude: _destLatitude,
+                                                    destLongitude:
+                                                        _destLongitude,
+                                                    totlaDistance:
+                                                        totalDistance,
+                                                    pickupLocation:
+                                                        _pickupController.text,
+                                                    dropOffLocation:
+                                                        _dropoffController.text,
+                                                    comment: _comments.text,
+                                                    pickupDateTime:
+                                                        _dateController.text,
+                                                    vehicleType: vehicle1,
+                                                    pickuptime: time)));
                                   } else if (checkbox2) {
                                     print(vehicle2);
                                     var totalDistance = calculateDistance(
@@ -545,23 +546,24 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 DrawPolyLine(
-                                                  originLatitude:
-                                                      _originLatitude,
-                                                  originLongitude:
-                                                      _originLongitude,
-                                                  destLatitude: _destLatitude,
-                                                  destLongitude: _destLongitude,
-                                                  totlaDistance: totalDistance,
-                                                  pickupLocation:
-                                                      _pickupController.text,
-                                                  dropOffLocation:
-                                                      _dropoffController.text,
-                                                  comment: _comments.text,
-                                                  pickupDateTime:
-                                                      _dateController.text,
-                                                  vehicleType: vehicle2,
-                                                  pickuptime: time
-                                                )));
+                                                    originLatitude:
+                                                        _originLatitude,
+                                                    originLongitude:
+                                                        _originLongitude,
+                                                    destLatitude: _destLatitude,
+                                                    destLongitude:
+                                                        _destLongitude,
+                                                    totlaDistance:
+                                                        totalDistance,
+                                                    pickupLocation:
+                                                        _pickupController.text,
+                                                    dropOffLocation:
+                                                        _dropoffController.text,
+                                                    comment: _comments.text,
+                                                    pickupDateTime:
+                                                        _dateController.text,
+                                                    vehicleType: vehicle2,
+                                                    pickuptime: time)));
                                   } else {
                                     print(vehicle3);
                                     var totalDistance = calculateDistance(

@@ -71,16 +71,16 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   void initState() {
     super.initState();
-    var androidInitilize = new AndroidInitializationSettings('logo');
-    var iOSinit = new IOSInitializationSettings();
-    var initSettings =
-        new InitializationSettings(android: androidInitilize, iOS: iOSinit);
-    localNotif = new FlutterLocalNotificationsPlugin();
-    localNotif.initialize(initSettings);
-    FirebaseMessaging.onMessage.listen((event) {
-      LocalNotificationService.display(event);
-    });
-    storeNotificationToken();
+    // var androidInitilize = new AndroidInitializationSettings('logo');
+    // var iOSinit = new IOSInitializationSettings();
+    // var initSettings =
+    //     new InitializationSettings(android: androidInitilize, iOS: iOSinit);
+    // localNotif = new FlutterLocalNotificationsPlugin();
+    // localNotif.initialize(initSettings);
+    // FirebaseMessaging.onMessage.listen((event) {
+    //   LocalNotificationService.display(event);
+    // });
+    // storeNotificationToken();
   }
 
   sendNotification(String title, String token) async {
@@ -406,7 +406,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               },
                               SetOptions(merge: true)
                             );
-                            sendNotification('Trip', token!);
+                          // sendNotification('Trip', token!);
                             // _showMessageInScaffold("Ride Conform Successfully");
                             //add data end
                             Navigator.push(
