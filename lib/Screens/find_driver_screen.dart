@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:location/location.dart' as loc;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/poly_line_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
@@ -20,28 +22,66 @@ class CustomemapPage extends StatefulWidget {
 class CustomemapPageState extends State<CustomemapPage> {
   TextEditingController _inpurangeController = TextEditingController();
   var filterdistance;
-  double clatitude=0.0;
-   double clongitude=0.0;
+  double clatitude = 0.0;
+  double clongitude = 0.0;
   @override
   void initState() {
+    print("daily rides");
     getCurrentLocation();
     filterdistance = 100;
     super.initState();
     setSourceAndDestinationIcons();
   }
 
-
+//LocationPermission permission;
   void getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    var lat = position.latitude;
-    var long = position.longitude;
-    // passing this to latitude and longitude strings
-    setState(() {
-      clatitude = lat;//"$lat";
-      clongitude = long;//"$long";
-     
-    });
+    print("location permission 1");
+    var permission = await Geolocator.checkPermission();
+    print("permission check 1");
+    print(permission);
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    print(serviceEnabled);
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await loc.Location().requestService();
+      return Future.error('Location services are disabled.');
+    }
+
+    print("permission check 1");
+    print(permission);
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      print("permission check");
+      print(permission);
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+    var status = await Permission.locationWhenInUse.serviceStatus.isEnabled;
+    //print("location permission");
+    // print(status);
+    if (status) {
+      // We didn't ask for permission yet or the permission has been denied before but not permanently.
+      var position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        clatitude = position.latitude;
+        clongitude = position.longitude;
+      });
+    }
+    // bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    // var status = await Geolocator.checkPermission();
+    // print(status);
+    //await Geolocator.requestPermission();
   }
 
   //snackbar message
@@ -63,7 +103,7 @@ class CustomemapPageState extends State<CustomemapPage> {
   List<Marker> allMarkers = [];
   late BitmapDescriptor sourceIcon;
 
-    void setSourceAndDestinationIcons() async {
+  void setSourceAndDestinationIcons() async {
     sourceIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), "assets/driving_pin.png");
   }
@@ -77,14 +117,14 @@ class CustomemapPageState extends State<CustomemapPage> {
             return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (ctx, i) {
-                print( snapshot.data!.docs[i]['latitude']);
-                print( snapshot.data!.docs[i]['longitude']);
-            
-              
+                  print(snapshot.data!.docs[i]['latitude']);
+                  print(snapshot.data!.docs[i]['longitude']);
+
                   double distanceInMeters = Geolocator.distanceBetween(
-                     // double.parse(clatitude),
-                     // double.parse(clongitude),
-                     clatitude,clongitude,
+                      // double.parse(clatitude),
+                      // double.parse(clongitude),
+                      clatitude,
+                      clongitude,
                       snapshot.data!.docs[i]['latitude'],
                       snapshot.data!.docs[i]['longitude']);
                   if (distanceInMeters / 1000 < double.parse(dist)) {
@@ -96,27 +136,27 @@ class CustomemapPageState extends State<CustomemapPage> {
                     //filtermarker(distanceInMeters/1000);
                     //print(distanceInMeters);
                     //allMarkers.clear();
-                
+
                     allMarkers.add(Marker(
-                      markerId: MarkerId(snapshot.data!.docs[i]['name']),
-                      draggable: false,
-                      infoWindow:
-                          InfoWindow(title: snapshot.data!.docs[i]['address']),
-                      position: LatLng(snapshot.data!.docs[i]['latitude'],
-                          snapshot.data!.docs[i]['longitude']),
-                      onTap: () {
-                        _settingModalBottomSheet(
-                            context,
-                            snapshot.data!.docs[i]['phoneno'],
-                            snapshot.data!.docs[i]['address'],
-                            snapshot.data!.docs[i]['name'],
-                            clatitude,
-                            clongitude,
-                            snapshot.data!.docs[i]['Email'],
-                            snapshot.data!.docs[i]['services']);
-                      },
-                      icon: sourceIcon
-                    ));
+                        markerId: MarkerId(snapshot.data!.docs[i]['name']),
+                        draggable: false,
+                        infoWindow: InfoWindow(
+                            title: snapshot.data!.docs[i]['address']),
+                        position: LatLng(snapshot.data!.docs[i]['latitude'],
+                            snapshot.data!.docs[i]['longitude']),
+                        onTap: () {
+                          _settingModalBottomSheet(
+                              context,
+                              snapshot.data!.docs[i]['phoneno'],
+                              snapshot.data!.docs[i]['address'],
+                              snapshot.data!.docs[i]['name'],
+                              clatitude,
+                              clongitude,
+                              snapshot.data!.docs[i]['Email'],
+                              snapshot.data!.docs[i]['services'],
+                              snapshot.data!.docs[i]['token']);
+                        },
+                        icon: sourceIcon));
                   }
                   return snapshot.data!.docs.length - 1 == i
                       ? Column(
@@ -157,8 +197,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                 initialCameraPosition: CameraPosition(
                                     // target: LatLng(24.903623, 67.198367), zoom: 12),
                                     //target: LatLng(24.8679942, 67.3637389), zoom: 12),
-                                    target: LatLng(clatitude,
-                                        clongitude),
+                                    target: LatLng(clatitude, clongitude),
                                     zoom: 12),
                                 // 24.8679942
                                 onMapCreated: (GoogleMapController controller) {
@@ -206,27 +245,27 @@ class CustomemapPageState extends State<CustomemapPage> {
             print(length);
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
               allMarkers.add(Marker(
-                markerId: MarkerId(snapshot.data!.docs[i]['name']),
-                draggable: false,
-                infoWindow:
-                    InfoWindow(title: snapshot.data!.docs[i]['address']),
-                position: LatLng(snapshot.data!.docs[i]['latitude'],
-                    snapshot.data!.docs[i]['longitude']),
-                onTap: () {
-                  _settingModalBottomSheet(
-                      context,
-                      snapshot.data!.docs[i]['phoneno'],
-                      snapshot.data!.docs[i]['address'],
-                      snapshot.data!.docs[i]['name'],
-                      clatitude,
-                      clongitude,
-                      snapshot.data!.docs[i]['Email'],
-                      snapshot.data!.docs[i]['services']);
-                  // print("${snapshot.data.docs[i]['address']}");
-                  // print("${snapshot.data.docs[i]['phoneno']}");
-                },
-                icon: sourceIcon
-              ));
+                  markerId: MarkerId(snapshot.data!.docs[i]['name']),
+                  draggable: false,
+                  infoWindow:
+                      InfoWindow(title: snapshot.data!.docs[i]['address']),
+                  position: LatLng(snapshot.data!.docs[i]['latitude'],
+                      snapshot.data!.docs[i]['longitude']),
+                  onTap: () {
+                    _settingModalBottomSheet(
+                        context,
+                        snapshot.data!.docs[i]['phoneno'],
+                        snapshot.data!.docs[i]['address'],
+                        snapshot.data!.docs[i]['name'],
+                        clatitude,
+                        clongitude,
+                        snapshot.data!.docs[i]['Email'],
+                        snapshot.data!.docs[i]['services'],
+                        snapshot.data!.docs[i]['token']);
+                    // print("${snapshot.data.docs[i]['address']}");
+                    // print("${snapshot.data.docs[i]['phoneno']}");
+                  },
+                  icon: sourceIcon));
             }
             return Container(
               height: MediaQuery.of(context).size.height,
@@ -255,18 +294,20 @@ class CustomemapPageState extends State<CustomemapPage> {
   Widget build(BuildContext context) {
     print(
         "filterdistance value-------------------------------------------------");
-   // print(filterdistance);
+    print(clatitude);
+    print(clongitude);
+    // print(filterdistance);
     //  print(showallmech1);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back_ios),
-        ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back_ios),
+          ),
           title: Text(
             "Find Driver",
             style: TextStyle(
@@ -293,17 +334,15 @@ class CustomemapPageState extends State<CustomemapPage> {
           // ],
         ),
         body: Stack(
-          children:[
+          children: [
+            loadMarkerwithRange(filterdistance.toString()),
 
-                loadMarkerwithRange(filterdistance.toString()),
-          
-              // _zoomminusfunction(),
-              // _zoomplusfunction(),
-              // _buildContainer(context),
-            ],
-          ),
+            // _zoomminusfunction(),
+            // _zoomplusfunction(),
+            // _buildContainer(context),
+          ],
         ),
-      
+      ),
     );
   }
 
@@ -538,10 +577,7 @@ class CustomemapPageState extends State<CustomemapPage> {
 
         initialCameraPosition:
             //clatitude
-            CameraPosition(
-                target:
-                    LatLng(clatitude,clongitude),
-                zoom: 5),
+            CameraPosition(target: LatLng(clatitude, clongitude), zoom: 5),
 
         //CameraPosition(target: LatLng(24.903623, 67.198367), zoom: 5),
         onMapCreated: (GoogleMapController controller) {
@@ -576,14 +612,16 @@ class CustomemapPageState extends State<CustomemapPage> {
 
   //show bottom sheet
   void _settingModalBottomSheet(
-      context,
-      dynamic phoneno,
-      dynamic addres,
-      dynamic name,
-      dynamic currntlat,
-      dynamic currentlongi,
-      dynamic memail,
-      dynamic services) {
+    context,
+    dynamic phoneno,
+    dynamic addres,
+    dynamic name,
+    dynamic currntlat,
+    dynamic currentlongi,
+    dynamic memail,
+    dynamic services,
+    dynamic token,
+  ) {
     showModalBottomSheet(
         context: context,
         builder: (BuildContext bc) {
@@ -605,11 +643,11 @@ class CustomemapPageState extends State<CustomemapPage> {
                       Text(
                         "The Travel App",
                         style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                          ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                        ),
                       ),
                       SizedBox(
                         height: 4.0,
@@ -617,10 +655,11 @@ class CustomemapPageState extends State<CustomemapPage> {
                       Text(
                         "Driver ",
                         style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',),
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                        ),
                       ),
                     ],
                   ),
@@ -631,10 +670,11 @@ class CustomemapPageState extends State<CustomemapPage> {
                     color: Colors.grey[800],
                     size: 30,
                   ),
-                  title: Text(name,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),
+                  title: Text(
+                    name,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
                 ),
                 //address
@@ -645,11 +685,12 @@ class CustomemapPageState extends State<CustomemapPage> {
                     height: 30,
                     width: 30,
                   ),
-                  title: Text(addres,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),),
-                  //Text("Address"),
+                  title: Text(
+                    addres,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                 ),
                 //services
                 ListTile(
@@ -658,77 +699,35 @@ class CustomemapPageState extends State<CustomemapPage> {
                     color: Colors.grey[800],
                     size: 30,
                   ),
-                  title: Text(services,
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),),
+                  title: Text(
+                    services,
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   //Text("Address"),
                 ),
 
-                // ListTile(
-                //   leading: Icon(
-                //     Icons.phone,
-                //     color: Colors.grey[800],
-                //     size: 30,
-                //   ),
-                //   title: Text(phoneno,
-                //   style: TextStyle(
-                //     fontFamily: 'Montserrat',
-                //   ),),
-                // ),
-                // SizedBox(
-                //   height: 10,
-                // ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Column(
-                      //   children: [
-                      //     // InkWell(
-                      //     //   onTap: () {
-                      //     //     _makePhoneCall('tel:$phoneno');
-                      //     //   },
-                      //     //   child: Container(
-                      //     //     height: 60,
-                      //     //     width: 60,
-                      //     //     decoration: BoxDecoration(
-                      //     //         color: Colors.grey[800], shape: BoxShape.circle),
-                      //     //     child: Center(
-                      //     //       child: Icon(
-                      //     //         Icons.call,
-                      //     //         color: Colors.white,
-                      //     //         size: 30,
-                      //     //       ),
-                      //     //     ),
-                      //     //   ),
-                      //     // ),
-                      //     // SizedBox(
-                      //     //   height: 8,
-                      //     // ),
-                      //     // Container(
-                      //     //     child: Text(
-                      //     //   " Call",
-                      //     //   style: TextStyle(
-                      //     //       fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'Montserrat',),
-                      //     // )),
-                      //   ],
-                      // ),
-                      // SizedBox(
-                      //   width: 10,
-                      // ),
                       Column(
                         children: [
                           InkWell(
                             onTap: () async {
-                              Navigator.push(context, MaterialPageRoute(builder: 
-                              (BuildContext context)=>PolyLinePointPage(
-                                dname: name,
-                                      dphone: phoneno,
-                                      dservices: services
-                              )));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PolyLinePointPage(
+                                            dname: name,
+                                            dphone: phoneno,
+                                            dservices: services,
+                                            token: token,
+                                          )));
 
                               //send cu
                               // await Database.addusercrrentloc(
@@ -736,14 +735,15 @@ class CustomemapPageState extends State<CustomemapPage> {
                               //     longi: currentlongi,
                               //     phono: phoneno,
                               //     memail: memail);
-                             // _showDialog();
+                              // _showDialog();
                               //_showMessageInScaffold("Lacation Send Successfully");
                             },
                             child: Container(
                               height: 60,
                               width: 60,
                               decoration: BoxDecoration(
-                                  color: Colors.grey[800], shape: BoxShape.circle),
+                                  color: Colors.grey[800],
+                                  shape: BoxShape.circle),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -761,26 +761,26 @@ class CustomemapPageState extends State<CustomemapPage> {
                             height: 8,
                           ),
                           InkWell(
-                            onTap: (){
-                              
+                            onTap: () {
                               Navigator.push(
-                                context, 
-                                MaterialPageRoute(
-                                  builder: (
-                                    BuildContext context)=>
-                                    PolyLinePointPage(
-                                      dname: name,
-                                      dphone: phoneno,
-                                      dservices: services
-                                    )
-                                  )
-                                );
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PolyLinePointPage(
+                                            dname: name,
+                                            dphone: phoneno,
+                                            dservices: services,
+                                            token: token,
+                                          )));
                             },
                             child: Container(
                                 child: Text(
                               " Next",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'Montserrat',),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat',
+                              ),
                             )),
                           ),
                         ],

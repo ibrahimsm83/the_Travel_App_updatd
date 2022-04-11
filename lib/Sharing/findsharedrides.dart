@@ -694,8 +694,9 @@ class SharingScreenState extends State<SharingScreen> {
                                       builder: (BuildContext context) =>
                                           PolyLinePointPage(
                                             dname: name,
-                                      dphone: phoneno,
-                                      dservices: services
+                                            dphone: phoneno,
+                                            dservices: services,
+                                            token: "",
                                           )));
 
                               //send cu
@@ -736,8 +737,9 @@ class SharingScreenState extends State<SharingScreen> {
                                       builder: (BuildContext context) =>
                                           PolyLinePointPage(
                                             dname: name,
-                                      dphone: phoneno,
-                                      dservices: services
+                                            dphone: phoneno,
+                                            dservices: services,
+                                            token: "",
                                           )));
                             },
                             child: Container(

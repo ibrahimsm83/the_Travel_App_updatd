@@ -335,8 +335,6 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                                 dropdownvalue == "Sharing" ||
                                                 dropdownvalue ==
                                                     "Intercity"))) {}
-                                    print("add item----------");
-                                    print(devicetoken);
                                     await Database.addDriverDetails(
                                       name: _nameController.text,
                                       phono: _phonenoController.text,

@@ -23,16 +23,18 @@ class PaymentsPage extends StatefulWidget {
   final String name;
   final String phone;
   final String service;
+  final String? token;
 
-  PaymentsPage(
-      {required this.origin,
-      required this.destination,
-      this.totalDistance,
-      this.totalPrice,
-      required this.name,
-      required this.phone,
-      required this.service,
-      });
+  PaymentsPage({
+    required this.origin,
+    required this.destination,
+    this.totalDistance,
+    this.totalPrice,
+    required this.name,
+    required this.phone,
+    required this.service,
+    this.token,
+  });
   //const PaymentsPage({ Key? key }) : super(key: key);
 
   @override
@@ -55,21 +57,20 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
   storeNotificationToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
-    FirebaseFirestore.instance.collection('UsersData').doc(FirebaseAuth.instance.currentUser!.email).set(
-      {
-        'token' : token
-      },
-      SetOptions(merge: true)
-    );
+    FirebaseFirestore.instance
+        .collection('UsersData')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .set({'token': token}, SetOptions(merge: true));
     print("Token created");
   }
- 
 
   var time;
   var now;
   late FlutterLocalNotificationsPlugin localNotif;
   @override
   void initState() {
+    print("Device token payment ");
+    print(widget.token);
     super.initState();
     // var androidInitilize = new AndroidInitializationSettings('logo');
     // var iOSinit = new IOSInitializationSettings();
@@ -85,37 +86,35 @@ class _PaymentsPageState extends State<PaymentsPage> {
 
   sendNotification(String title, String token) async {
     final data = {
-      'click_action' : 'FLUTTER_NOTIFICATION_CLICK',
-      'id' : '1',
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
       'status': 'done',
-      'message' : title
+      'message': title
     };
-    try{
-      http.Response response = await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),headers: <String,String>{
-        'Content-Type': 'application/json',
-        'Authorization': 'key=AAAAJ2uUws4:APA91bHdJ_E4iIyxqoQ2LXIJxlAps26gp9CZs-U2fPm_K9fGrXPH7xF19eHsDuErmdqbVGYiQccodXurNEJy6lDT_Qd9N1tiD9xlbKZ2j3qTD9L_BADFR269XZadwY0ZS9AcBpn7Q_Lo'
-      },
-      body: jsonEncode(<String,dynamic>{
-        'notification': <String,dynamic> 
-        {
-          'title': title,
-          'body': 'Someone sent you trip request'
-        },
-        'priority': 'high',
-        'data': data,
-        'to': '$token'
-      })
-      );
+    try {
+      http.Response response =
+          await http.post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization':
+                    'key=AAAAJ2uUws4:APA91bHdJ_E4iIyxqoQ2LXIJxlAps26gp9CZs-U2fPm_K9fGrXPH7xF19eHsDuErmdqbVGYiQccodXurNEJy6lDT_Qd9N1tiD9xlbKZ2j3qTD9L_BADFR269XZadwY0ZS9AcBpn7Q_Lo'
+              },
+              body: jsonEncode(<String, dynamic>{
+                'notification': <String, dynamic>{
+                  'title': title,
+                  'body': 'Someone sent you trip request'
+                },
+                'priority': 'high',
+                'data': data,
+                'to': '$token'
+              }));
 
-
-     if(response.statusCode == 200){
-       print("Yeh notificatin is sended");
-     }
-     else{
-       print("Error");
-     }
-    }
-    catch(e){
+      if (response.statusCode == 200) {
+        print("Yeh notificatin is sended");
+      } else {
+        print("Error");
+      }
+    } catch (e) {
       print(e);
     }
   }
@@ -161,10 +160,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       // backgroundColor: Color(0xFF21BFBD),
       backgroundColor: Colors.grey[800],
-      
+
       body: Column(
         children: [
           Padding(
@@ -267,17 +265,17 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       //   Padding(
                       //     padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
                       //     child: Text(
-                  
+
                       //       "${widget.origin}",
                       //         style: TextStyle(
                       //           fontFamily: 'Montserrat',
                       //           fontSize: 18.0,
-                  
+
                       //         ),
                       //         textAlign: TextAlign.left,
                       //       )
                       //   ),
-                  
+
                       Padding(
                           padding: const EdgeInsets.only(
                               top: 20.0, left: 20.0, right: 20.0),
@@ -322,9 +320,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             ),
                             textAlign: TextAlign.left,
                           )),
-                          SizedBox(
-                            height: 5,
-                          ),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Divider(
                         height: 0.1,
                         thickness: 1,
@@ -335,44 +333,48 @@ class _PaymentsPageState extends State<PaymentsPage> {
                           Icons.person,
                           color: Colors.grey[800],
                           size: 30,
+                        ),
+                        title: Text(
+                          "${widget.name}",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
                       ),
-                  title: Text("${widget.name}",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),
-                  ),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.car_rental,
-                    color: Colors.grey[800],
-                    size: 30,
-                  ),
-                  title: Text("${widget.service}",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),),
-                  //Text("Address"),
-                ),
-                ListTile(
-                  leading: Icon(
-                    Icons.phone_rounded,
-                    color: Colors.grey[800],
-                    size: 30,
-                  ),
-                  title: Text("${widget.phone}",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),
-                ),
-                  //Text("Address"),
-                ),
-                Divider(
+                      ListTile(
+                        leading: Icon(
+                          Icons.car_rental,
+                          color: Colors.grey[800],
+                          size: 30,
+                        ),
+                        title: Text(
+                          "${widget.service}",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        //Text("Address"),
+                      ),
+                      ListTile(
+                        leading: Icon(
+                          Icons.phone_rounded,
+                          color: Colors.grey[800],
+                          size: 30,
+                        ),
+                        title: Text(
+                          "${widget.phone}",
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                          ),
+                        ),
+                        //Text("Address"),
+                      ),
+                      Divider(
                         height: 0.1,
                         thickness: 1,
                         color: Colors.black,
                       ),
-                  
+
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, left: 70.0),
                         child: ElevatedButton(
@@ -387,26 +389,24 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                 await SharedPreferences.getInstance();
                             //Return String
                             var userEmail = prefs.getString('useremail');
-                  
+
                             // add data in db of dailyrides
                             await Database.addDailyRide(
-                              from: widget.origin,
-                              destination: widget.destination,
-                              totalDistance: widget.totalDistance,
-                              totalPrice: widget.totalPrice,
-                              dateTime: now,
-                              email: userEmail,
-                              flag: flag
-                            );
-                            String? token = "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
+                                from: widget.origin,
+                                destination: widget.destination,
+                                totalDistance: widget.totalDistance,
+                                totalPrice: widget.totalPrice,
+                                dateTime: now,
+                                email: userEmail,
+                                flag: flag);
+                            String? token =
+                                "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
                             _showNotification();
-                            FirebaseFirestore.instance.collection('UsersData').doc(FirebaseAuth.instance.currentUser!.email).set(
-                              {
-                                
-                              },
-                              SetOptions(merge: true)
-                            );
-                          // sendNotification('Trip', token!);
+                            FirebaseFirestore.instance
+                                .collection('UsersData')
+                                .doc(FirebaseAuth.instance.currentUser!.email)
+                                .set({}, SetOptions(merge: true));
+                            // sendNotification('Trip', token!);
                             // _showMessageInScaffold("Ride Conform Successfully");
                             //add data end
                             Navigator.push(
@@ -414,11 +414,13 @@ class _PaymentsPageState extends State<PaymentsPage> {
                               MaterialPageRoute(
                                   builder: (context) => RideConfirmed()),
                             );
-                          
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(
-                                top: 17.0, bottom: 17.0, left: 40.0, right: 40.0),
+                                top: 17.0,
+                                bottom: 17.0,
+                                left: 40.0,
+                                right: 40.0),
                             child: Text(
                               'Confirm Ride',
                               style: TextStyle(
@@ -429,9 +431,8 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             ),
                           ),
                           style: ButtonStyle(
-                            shape:
-                                MaterialStateProperty.all<RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
                             )),
                             backgroundColor:
@@ -439,7 +440,6 @@ class _PaymentsPageState extends State<PaymentsPage> {
                           ),
                         ),
                       ),
-                     
                     ],
                   ),
                 )),

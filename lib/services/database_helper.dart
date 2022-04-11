@@ -138,7 +138,7 @@ class Database {
 
   //add user details
   static Future<void> adduserdata(
-      {String? name, String? Email, String? password}) async {
+      {String? name, String? Email, String? password,String? token}) async {
     DocumentReference documentReferencer =
         _firestore.collection('UsersData').doc(Email);
 
@@ -146,6 +146,7 @@ class Database {
       "uname": name,
       "UEmail": Email,
       "Upassword": password,
+      "UToken":token
     };
 //add data
     await documentReferencer

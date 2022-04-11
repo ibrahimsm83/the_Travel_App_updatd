@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -124,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     child: TextFormField(
                                         // ignore: missing_return
                                         validator: (input) {
-                                          if (input ==null ) 
+                                          if (input == null)
                                             return 'Enter Name';
                                         },
                                         controller: name,
@@ -137,10 +138,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Container(
                                     child: TextFormField(
                                         // ignore: missing_return
-                                         validator: (input) {
-                                       if (input ==null ) 
+                                        validator: (input) {
+                                          if (input == null)
                                             return 'Enter Email';
-                                         },
+                                        },
                                         controller: email,
                                         decoration: InputDecoration(
                                             labelText: 'Email',
@@ -152,10 +153,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     child: TextFormField(
                                         // ignore: missing_return
                                         validator: (String? input) {
-                                          if (input ==null ) 
+                                          if (input == null)
                                             return 'Enter Password';
-                                         
-                                  
                                         },
                                         controller: password,
                                         decoration: InputDecoration(
@@ -172,6 +171,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         EdgeInsets.fromLTRB(70, 10, 70, 10),
                                     onPressed: () async {
                                       if (_formKey.currentState!.validate()) {
+                                        String? devicetoken =
+                                            await FirebaseMessaging.instance
+                                                .getToken();
                                         if (email.text.isNotEmpty &&
                                             password.text.isNotEmpty &&
                                             name.text.isNotEmpty) {
@@ -180,6 +182,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             name: name.text,
                                             Email: email.text,
                                             password: password.text,
+                                            token: devicetoken,
                                           );
                                           //_showMessageInScaffold("Registered Successfully${locationMessage}");
                                           _showMessageInScaffold(

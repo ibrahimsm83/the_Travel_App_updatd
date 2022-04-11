@@ -110,17 +110,7 @@ class _HomePageState extends State<HomePage> {
                                                     image: AssetImage(
                                                         "$imgpath/dr.jpg"),
                                                     fit: BoxFit.cover,
-                                                    //   opacity: 0.6
                                                   ),
-                                                  // color: Color(0xFFC1C8E4),
-                                                  // gradient: LinearGradient(
-                                                  //     colors: [
-                                                  //       Color(0xFF8ab0e6),
-                                                  //       Color(0xFFebe1e6),
-                                                  //     ],
-                                                  //     begin: Alignment.topRight,
-                                                  //     end:
-                                                  //         Alignment.bottomLeft),
                                                   borderRadius:
                                                       BorderRadius.all(
                                                           Radius.circular(

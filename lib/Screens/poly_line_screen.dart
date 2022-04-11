@@ -1,30 +1,26 @@
 import 'dart:async';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
+
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'dart:math' show cos, sqrt, asin;
-import 'package:intl/intl.dart';
-import 'package:travelapp/Screens/find_driver_screen.dart';
 import 'package:travelapp/payments.dart';
 
 class PolyLinePointPage extends StatefulWidget {
   final String dname;
   final String dphone;
   final String dservices;
+  final String token;
 
   PolyLinePointPage({
     required this.dname,
     required this.dphone,
     required this.dservices,
-  }
-  );
+    required this.token,
+  });
   //const PolyLinePointPage({Key? key}) : super(key: key);
 
   @override
@@ -50,6 +46,8 @@ class _PolyLinePointPageState extends State<PolyLinePointPage> {
   late BitmapDescriptor destinationIcon;
   @override
   void initState() {
+    print("Device token ");
+    print(widget.token);
     super.initState();
     setSourceAndDestinationIcons();
   }
@@ -252,7 +250,8 @@ class _PolyLinePointPageState extends State<PolyLinePointPage> {
                                 totalPrice: totalDistance.truncate() * 30,
                                 name: widget.dname,
                                 phone: widget.dphone,
-                                service: widget.dservices
+                                service: widget.dservices,
+                                token: widget.token,
                               ),
                             ),
                           );
