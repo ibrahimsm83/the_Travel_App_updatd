@@ -19,7 +19,8 @@ class Database {
       int? seats,
       String? servicetype,
       double? latitude,
-      double? longitude}) async {
+      double? longitude,
+      String? token}) async {
     // DocumentReference documentReferencer =
     // _mainCollection.doc(phono).collection('Data').doc();
     DocumentReference documentReferencer = _mainCollection.doc(phono);
@@ -36,6 +37,7 @@ class Database {
       "servicetype": servicetype,
       "latitude": latitude,
       "longitude": longitude,
+      "token": token,
     };
 //add data
     await documentReferencer

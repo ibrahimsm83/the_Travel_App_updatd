@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,6 +11,22 @@ import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 
 //import 'package:meconline/HomePage.dart';
+//Saving Token
+
+Future<void> saveTokenToDatabase(String token) async {
+  // Assume user is logged in for this example
+  // String userId = FirebaseAuth.instance.currentUser!.uid;
+  // print("device userId is created ${userId}");
+  //var data = await FirebaseFirestore.instance.collection('Drivers').doc().get();
+  //print(data);
+  await FirebaseFirestore.instance
+      .collection('Drivers')
+      .doc("342312345")
+      .update({
+    'tokens': //token,
+        FieldValue.arrayUnion([token]),
+  });
+}
 
 class SignUpDriverPage extends StatefulWidget {
   @override
@@ -32,6 +51,19 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
       longitude = "$long";
       locationMessage = "Latitude: $lat and Longitude: $long";
     });
+  }
+
+  late String _token;
+//  setupToken();
+  Future<void> setupToken() async {
+    // Get the token each time the application loads
+    String? token = await FirebaseMessaging.instance.getToken();
+    log("device token is created ${token}");
+    // Save the initial token to the database
+    await saveTokenToDatabase(token!);
+
+    // Any time the token refreshes, store this in the database too.
+    FirebaseMessaging.instance.onTokenRefresh.listen(saveTokenToDatabase);
   }
 
   //snackbar message
@@ -271,6 +303,9 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                               padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
+                                  String? devicetoken = await FirebaseMessaging
+                                      .instance
+                                      .getToken();
                                   if (_nameController.text.isNotEmpty &&
                                       _phonenoController.text.isNotEmpty &&
                                       _cityController.text.isNotEmpty &&
@@ -287,20 +322,21 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                                 dropdownvalue ==
                                                     "Intercity")) ||
                                         ((int.parse(_seatsController.text)) >=
-                                                3 && (int.parse(_seatsController.text)) <
+                                                3 &&
+                                            (int.parse(_seatsController.text)) <
                                                 7 &&
                                             (dropdownvalue == "Event" ||
                                                 dropdownvalue == "Sharing" ||
                                                 dropdownvalue ==
                                                     "Intercity")) ||
                                         ((int.parse(_seatsController.text)) >=
-                                                7 && 
+                                                7 &&
                                             (dropdownvalue == "Event" ||
                                                 dropdownvalue == "Sharing" ||
                                                 dropdownvalue ==
-                                                    "Intercity"))
-                                    ) {}
+                                                    "Intercity"))) {}
                                     print("add item----------");
+                                    print(devicetoken);
                                     await Database.addDriverDetails(
                                       name: _nameController.text,
                                       phono: _phonenoController.text,
@@ -313,21 +349,17 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                       longitude: double.parse(longitude!),
                                       seats: int.parse(_seatsController.text),
                                       servicetype: dropdownvalue,
+                                      token: devicetoken,
                                     );
                                     //_showMessageInScaffold("Registered Successfully${locationMessage}");
                                     _showMessageInScaffold(
                                         "Registered Successfully");
                                     _register();
                                   } else {
-                                    print("------------");
                                     _showMessageInScaffold(
                                         "Please Fill all Fields");
                                   }
                                 }
-
-                                // if (_formKey.currentState.validate()) {
-                                //   _register();
-                                // }
                               },
                               child: Text('SignUp',
                                   style: TextStyle(
@@ -339,7 +371,6 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                 borderRadius: BorderRadius.circular(20.0),
                               ),
                             ),
-
                             SizedBox(
                               height: 10,
                             ),

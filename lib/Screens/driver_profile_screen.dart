@@ -1,16 +1,18 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/Driver/driver_main_page.dart';
-import 'package:travelapp/Screens/find_driver_screen.dart';
-import 'package:travelapp/Screens/login_user_screen.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:travelapp/services/local_push_notification.dart';
+
+
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({Key? key}) : super(key: key);
@@ -20,6 +22,8 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
+  
+
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -31,6 +35,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   void initState() {
+   
     //getCurrentLocation();
     getStringValuesSF();
     // 1. This method call when app in terminated state and you get a notification
