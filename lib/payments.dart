@@ -1,16 +1,14 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:date_format/date_format.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/rideconfirmed.dart';
 import 'package:travelapp/services/database_helper.dart';
-import 'package:travelapp/services/local_push_notification.dart';
+
 import 'package:http/http.dart' as http;
 //import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:number_inc_dec/number_inc_dec.dart';
@@ -55,14 +53,14 @@ class _PaymentsPageState extends State<PaymentsPage> {
   }
   //DateTime selectedDate = DateTime.now();
 
-  storeNotificationToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    FirebaseFirestore.instance
-        .collection('UsersData')
-        .doc(FirebaseAuth.instance.currentUser!.email)
-        .set({'token': token}, SetOptions(merge: true));
-    print("Token created");
-  }
+  // storeNotificationToken() async {
+  //   String? token = await FirebaseMessaging.instance.getToken();
+  //   FirebaseFirestore.instance
+  //       .collection('UsersData')
+  //       .doc(FirebaseAuth.instance.currentUser!.email)
+  //       .set({'token': token}, SetOptions(merge: true));
+  //   print("Token created");
+  // }
 
   var time;
   var now;
@@ -84,6 +82,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
     // storeNotificationToken();
   }
 
+/*
   sendNotification(String title, String token) async {
     final data = {
       'click_action': 'FLUTTER_NOTIFICATION_CLICK',
@@ -118,7 +117,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
       print(e);
     }
   }
-
+*/
   Future _showNotification() async {
     var androidDetails = new AndroidNotificationDetails(
         "Hello", "The Travel App",

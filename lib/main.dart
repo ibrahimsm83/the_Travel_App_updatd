@@ -30,6 +30,7 @@ void main() async {
   await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   LocalNotificationService.initialize();
+
   runApp(MyApp());
 }
 
@@ -41,78 +42,77 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  //final Firestore _db = Firestore.instance;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    //
+// 1. This method call when app in terminated state and you get a notification
+    // when you click on notification app open from terminated state and you can get notification data in this method
+    print("push notification");
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        print(
+            "FirebaseMessaging.instance.getInitialMessage-------------------");
+
+        if (message != null) {
+          print("New Notification ibrahim");
+          LocalNotificationService.createanddisplaynotification(message);
+          // if (message.data['_id'] != null) {
+          //   Navigator.of(context).push(
+          //     MaterialPageRoute(
+          //       builder: (context) => DemoScreen(
+          //         id: message.data['_id'],
+          //       ),
+          //     ),
+          //   );
+          // }
+        }
+      },
+    );
+    //App Push Notification
     FirebaseMessaging.onMessage.listen(
       (message) {
-        print("FirebaseMessaging.onMessage.listen");
+        print("FirebaseMessaging.onMessage.listen 44444444444");
         if (message.notification != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print(message.notification!.title);
           print(message.notification!.body);
           print("message.data11 ${message.data}");
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              content: ListTile(
-                title: Text(message.notification!.title.toString()),
-                subtitle: Text(message.notification!.body.toString()),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  color: Colors.amber,
-                  child: Text('Ok'),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
-            ),
-          );
+          // showDialog(
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     content: ListTile(
+          //       title: Text(message.notification!.title.toString()),
+          //       subtitle: Text(message.notification!.body.toString()),
+          //     ),
+          //     actions: <Widget>[
+          //       FlatButton(
+          //         color: Colors.amber,
+          //         child: Text('Ok'),
+          //         onPressed: () => Navigator.of(context).pop(),
+          //       ),
+          //     ],
+          //   ),
+          // );
         }
       },
     );
-
-    //
-    // _fcm.configure(
-    //  FirebaseMessaging onMessage: (Map<String, dynamic> message) async {
-    //     print("onMessage: $message");
-    //     // final snackbar = SnackBar(
-    //     //   content: Text(message['notification']['title']),
-    //     //   action: SnackBarAction(
-    //     //     label: 'Go',
-    //     //     onPressed: () => null,
-    //     //   ),
-    //     // );
-    //     // Scaffold.of(context).showSnackBar(snackbar);
-    //     showDialog(
-    //       context: context,
-    //       builder: (context) => AlertDialog(
-    //         content: ListTile(
-    //           title: Text(message['notification']['title']),
-    //           subtitle: Text(message['notification']['body']),
-    //         ),
-    //         actions: <Widget>[
-    //           FlatButton(
-    //             color: Colors.amber,
-    //             child: Text('Ok'),
-    //             onPressed: () => Navigator.of(context).pop(),
-    //           ),
-    //         ],
-    //       ),
-    //     );
-    //   },
-    //   onLaunch: (Map<String, dynamic> message) async {
-    //     print("onLaunch: $message");
-    //     // TODO optional
-    //   },
-    //   onResume: (Map<String, dynamic> message) async {
-    //     print("onResume: $message");
-    //     // TODO optional
-    //   },
+    //background state
+    //if you are sending a notification message, and you clicked the notification then the onMessageOpenedApp will be called.
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      final routeFromMessage = message.data;
+      LocalNotificationService.createanddisplaynotification(message);
+      print(routeFromMessage);
+      print('Message clicked!');
+    });
+    // onLaunch: (Map<String, dynamic> message) async {
+    //       print("onLaunch: $message");
+    //       // TODO optional
+    //     },
+    //     onResume: (Map<String, dynamic> message) async {
+    //       print("onResume: $message");
+    //       // TODO optional
+    //     },
     //);
   }
 

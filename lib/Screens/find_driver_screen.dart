@@ -39,7 +39,6 @@ class CustomemapPageState extends State<CustomemapPage> {
     var permission = await Geolocator.checkPermission();
     print("permission check 1");
     print(permission);
-
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     print(serviceEnabled);
     if (!serviceEnabled) {

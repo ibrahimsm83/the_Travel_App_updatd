@@ -23,7 +23,6 @@ class _DriverMainPageState extends State<DriverMainPage> {
   late GoogleMapController mapController;
 
   bool flag = false;
-   
 
   // double _originLatitude = 24.825671, _originLongitude = 67.13184;
   // double _destLatitude = 24.8614622, _destLongitude = 67.00993879999;
@@ -40,7 +39,6 @@ class _DriverMainPageState extends State<DriverMainPage> {
   late BitmapDescriptor sourceIcon;
   late BitmapDescriptor destinationIcon;
 
-  
   //var phoneno;
 
   storeNotificationToken() async {
@@ -50,13 +48,14 @@ class _DriverMainPageState extends State<DriverMainPage> {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     //                         //Return String
     //                         var phoneno = prefs.getString('phoneno');
-    
-    FirebaseFirestore.instance.collection('Drivers').doc(FirebaseAuth.instance.currentUser!.phoneNumber).set(
-      {
-        'token' : token
-      },
-    //   SetOptions(merge: true)
-     );
+
+    FirebaseFirestore.instance
+        .collection('Drivers')
+        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+        .set(
+      {'token': token},
+      //   SetOptions(merge: true)
+    );
     print(FirebaseAuth.instance.currentUser!.phoneNumber);
     print(token);
   }
@@ -91,16 +90,15 @@ class _DriverMainPageState extends State<DriverMainPage> {
                       Text(
                         "Trip For You",
                         style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontFamily: 'Montserrat',
-                          ),
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontFamily: 'Montserrat',
+                        ),
                       ),
                       SizedBox(
                         height: 4.0,
                       ),
-                      
                     ],
                   ),
                 ),
@@ -110,23 +108,26 @@ class _DriverMainPageState extends State<DriverMainPage> {
                     color: Colors.grey[800],
                     size: 30,
                   ),
-                  title: Text("Source",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),
+                  title: Text(
+                    "Source",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
                   ),
                 ),
                 //address
                 ListTile(
-                  leading:Icon(
+                  leading: Icon(
                     Icons.location_pin,
                     color: Colors.grey[800],
                     size: 30,
                   ),
-                  title: Text("Destination",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),),
+                  title: Text(
+                    "Destination",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   //Text("Address"),
                 ),
                 //services
@@ -136,10 +137,12 @@ class _DriverMainPageState extends State<DriverMainPage> {
                     color: Colors.grey[800],
                     size: 30,
                   ),
-                  title: Text("Distance",
-                  style: TextStyle(
-                    fontFamily: 'Montserrat',
-                  ),),
+                  title: Text(
+                    "Distance",
+                    style: TextStyle(
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
                   //Text("Address"),
                 ),
                 Padding(
@@ -152,7 +155,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                         children: [
                           InkWell(
                             onTap: () async {
-                              // Navigator.push(context, MaterialPageRoute(builder: 
+                              // Navigator.push(context, MaterialPageRoute(builder:
                               // (BuildContext context)=>PolyLinePointPage(
                               //   dname: name,
                               //         dphone: phoneno,
@@ -163,7 +166,8 @@ class _DriverMainPageState extends State<DriverMainPage> {
                               height: 60,
                               width: 60,
                               decoration: BoxDecoration(
-                                  color: Colors.grey[800], shape: BoxShape.circle),
+                                  color: Colors.grey[800],
+                                  shape: BoxShape.circle),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -181,10 +185,9 @@ class _DriverMainPageState extends State<DriverMainPage> {
                             height: 8,
                           ),
                           InkWell(
-                            onTap: (){
-                              
+                            onTap: () {
                               // Navigator.push(
-                              //   context, 
+                              //   context,
                               //   MaterialPageRoute(
                               //     builder: (
                               //       BuildContext context)=>
@@ -200,7 +203,10 @@ class _DriverMainPageState extends State<DriverMainPage> {
                                 child: Text(
                               " Next",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold,fontFamily: 'Montserrat',),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat',
+                              ),
                             )),
                           ),
                         ],
@@ -213,16 +219,15 @@ class _DriverMainPageState extends State<DriverMainPage> {
           );
         });
   }
- 
-  
+
   @override
   void initState() {
     super.initState();
     setSourceAndDestinationIcons();
-    FirebaseMessaging.onMessage.listen((event) {
-      print('**************************************************************FCM');
-      //LocalNotificationService.display(event);
-    });
+    // FirebaseMessaging.onMessage.listen((event) {
+    //   print('**************************************************************FCM');
+    //   //LocalNotificationService.display(event);
+    // });
     storeNotificationToken();
   }
 
@@ -264,17 +269,15 @@ class _DriverMainPageState extends State<DriverMainPage> {
           appBar: AppBar(
             leading: IconButton(
               onPressed: () {
-                Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => DriverProfileScreen()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => DriverProfileScreen()));
               },
               icon: Icon(Icons.arrow_back_ios),
             ),
-            title: const Text(
-              "The Travel App",
+            title: const Text("The Travel App",
                 style: TextStyle(
                   fontFamily: 'Montserrat',
-                )
-            ),
+                )),
             backgroundColor: Colors.grey[800],
             toolbarHeight: 70.0,
           ),
@@ -292,12 +295,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
                         // width: double.infinity,
                         child: GoogleMap(
                           initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                              24.903623, 
-                              67.198367
-                            ),
-                            zoom: 10
-                          ),
+                              target: LatLng(24.903623, 67.198367), zoom: 10),
                           myLocationEnabled: true,
                           tiltGesturesEnabled: true,
                           compassEnabled: true,
@@ -315,10 +313,9 @@ class _DriverMainPageState extends State<DriverMainPage> {
                           child: Text(
                             "Finding Trip",
                             style: TextStyle(
-                              fontFamily: "Montserrat",
-                              fontSize: 22.0,
-                              fontWeight: FontWeight.bold
-                            ),
+                                fontFamily: "Montserrat",
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       )
