@@ -14,6 +14,7 @@ import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+//Daily Rides
 class CustomemapPage extends StatefulWidget {
   @override
   CustomemapPageState createState() => CustomemapPageState();
@@ -21,12 +22,13 @@ class CustomemapPage extends StatefulWidget {
 
 class CustomemapPageState extends State<CustomemapPage> {
   TextEditingController _inpurangeController = TextEditingController();
+  //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var filterdistance;
   double clatitude = 0.0;
   double clongitude = 0.0;
   @override
   void initState() {
-    print("daily rides");
+    //print(querysnapshot);
     getCurrentLocation();
     filterdistance = 100;
     super.initState();
@@ -76,11 +78,6 @@ class CustomemapPageState extends State<CustomemapPage> {
         clongitude = position.longitude;
       });
     }
-    // bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-
-    // var status = await Geolocator.checkPermission();
-    // print(status);
-    //await Geolocator.requestPermission();
   }
 
   //snackbar message
@@ -289,14 +286,25 @@ class CustomemapPageState extends State<CustomemapPage> {
 
   double zoomVal = 5.0;
 
+  // void retivedata() {
+  //   print("daily rides*******1********************");
+  //   // var QuerySnapshot =
+  //   //     await
+  //   print("daily rides*******2********************");
+  //   _firestore
+  //       .collection('Drivers')
+  //       .doc('03054601122')
+  //       .get()
+  //       .then((value) => print(" ******************** dsfds        ///////${value.data()?["services"]}"));
+
+  //   // print(QuerySnapshot.data()?["Email"]);
+
+  //   print("daily rides*******3********************");
+  // }
+
   @override
   Widget build(BuildContext context) {
-    print(
-        "filterdistance value-------------------------------------------------");
-    print(clatitude);
-    print(clongitude);
-    // print(filterdistance);
-    //  print(showallmech1);
+    //retivedata();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -717,6 +725,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                         children: [
                           InkWell(
                             onTap: () async {
+                              print("taped");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

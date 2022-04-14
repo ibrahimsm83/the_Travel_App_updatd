@@ -54,6 +54,8 @@ class Database {
       num? totalPrice,
       DateTime? dateTime,
       String? email,
+      String? driverid,
+      String? userid,
       bool flag = false}) async {
     DocumentReference documentReferencer =
         _firestore.collection('DailyRides').doc(email);
@@ -63,6 +65,8 @@ class Database {
       "totalDistance": totalDistance,
       "totalPrice": totalPrice,
       "dateTime": dateTime,
+      "userid": userid,
+      "driverid": driverid,
       "flag": flag
     };
 //add data
@@ -138,7 +142,7 @@ class Database {
 
   //add user details
   static Future<void> adduserdata(
-      {String? name, String? Email, String? password,String? token}) async {
+      {String? name, String? Email, String? password, String? token}) async {
     DocumentReference documentReferencer =
         _firestore.collection('UsersData').doc(Email);
 
@@ -146,7 +150,7 @@ class Database {
       "uname": name,
       "UEmail": Email,
       "Upassword": password,
-      "UToken":token
+      "UToken": token
     };
 //add data
     await documentReferencer
