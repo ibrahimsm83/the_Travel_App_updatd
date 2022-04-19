@@ -7,7 +7,7 @@ const admin=require('firebase-admin');
 //   response.send("Hello from Firebase!");
 // });
 //
-admin.initializeApp();
+admin.initializeApp(functions.config().firestore);
 //db use for data get from firebase
 var db=admin.firestore();
 var fcm=admin.messaging();
@@ -23,20 +23,21 @@ exports.notifyNewMessage = functions.firestore.document('DailyRides/{dailyrideid
     console.log("no device");
     return;
   }
-  //const message=snapshot.data;
+  const message=snapshot.data;
   //print("driver data----------------");
   //print(message.driverid)
   //const token="dIbRAFexSgOUFYTqbwuYgg:APA91bFXUcYTD0jmxeMEEjRAFFvjbYwWJSdrNYr-KSkoyZ_vRXo5tiBnMQVJBqwz19gTAciP5-wpFuweNWXgMosFcLMRLitf0lifR_ijauD6rxmltnoQu2tXSpblJSlNwQqjJ6zEodMe";
-  const token=db.collection('Drivers').doc(message.driverid).get().then((value)=>value.data()["token"]);
+  const token=db.collection('Drivers').doc(message.driverid).get().then((value)=>value.data().token);
+  // const token=db.collection('Drivers').doc(message.driverid).get().then((value)=>value.data()["token"]);
+  //const token1="f9Qtc3buQ0K2fNmy8LQzHg:APA91bFgA6pgmUfEOJVQtaFGtFI9OyXU4jWBD5FzET_FoB-_C00IMoFl9aesyx8yEpLUDinV-bA-hSFMdosaH3O8Jmc2kShZPuV923ql5bsDDR5i1-U0m1uG-uwuuvWG605mfMOgDvHX";
+  // console.log("device token****************");
   
-  console.log("device token****************");
-  
-  console.log(token);
+  // console.log(token);
    // Notification details.
    const payload = {
     notification: {
-        title: 'You have new message(s) ibrahim',
-        body: 'New message(s) recieved.',
+        title: "new ride",
+        body: "Request",
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
         priority: "high",
         sound: 'default',
@@ -44,9 +45,9 @@ exports.notifyNewMessage = functions.firestore.document('DailyRides/{dailyrideid
   };
    try{
 const response=fcm.messaging().sendToDevice(token,payload);
-console.log("Notification send successfully ");
+// console.log("Notification send successfully ");
    } catch (err){
-    console.log("Error sending Notification.");
+   // console.log("Error sending Notification.");
    }
     // data: {
     //     'title': 'You have new message(s)',
@@ -57,6 +58,7 @@ console.log("Notification send successfully ");
 
 //};
 //return fcm.sendToDevice(token,payload)
-})
+}
+);
 
 

@@ -41,24 +41,24 @@ class _DriverMainPageState extends State<DriverMainPage> {
 
   //var phoneno;
 
-  storeNotificationToken() async {
-    print("jhggjjhggg");
-    Database.readDriverData();
-    String? token = await FirebaseMessaging.instance.getToken();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    //                         //Return String
-    //                         var phoneno = prefs.getString('phoneno');
+  // storeNotificationToken() async {
+  //   print("jhggjjhggg");
+  //   Database.readDriverData();
+  //   String? token = await FirebaseMessaging.instance.getToken();
+  //   // SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   //                         //Return String
+  //   //                         var phoneno = prefs.getString('phoneno');
 
-    FirebaseFirestore.instance
-        .collection('Drivers')
-        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
-        .set(
-      {'token': token},
-      //   SetOptions(merge: true)
-    );
-    print(FirebaseAuth.instance.currentUser!.phoneNumber);
-    print(token);
-  }
+  //   FirebaseFirestore.instance
+  //       .collection('Drivers')
+  //       .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+  //       .set(
+  //     {'token': token},
+  //     //   SetOptions(merge: true)
+  //   );
+  //   print(FirebaseAuth.instance.currentUser!.phoneNumber);
+  //   print(token);
+  // }
 
   void _settingModalBottomSheet(
       context,
@@ -228,7 +228,7 @@ class _DriverMainPageState extends State<DriverMainPage> {
     //   print('**************************************************************FCM');
     //   //LocalNotificationService.display(event);
     // });
-    storeNotificationToken();
+    // storeNotificationToken();
   }
 
   void setMapPins() {

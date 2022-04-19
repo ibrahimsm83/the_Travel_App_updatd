@@ -57,6 +57,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
       setState(() {
         _success = false;
       });
+      //showError("Login field");
     }
   }
 //sign in fun end
@@ -99,17 +100,16 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 70.0, right: 280.0),
                 child: IconButton(
-                  icon: Icon( Icons.arrow_back_ios_rounded,
-                  color: Colors.white,
-                  size: 30.0,
+                  icon: Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Colors.white,
+                    size: 30.0,
                   ),
                   onPressed: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => MainScreen()
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => MainScreen()));
                   },
                 ),
               ),
@@ -167,24 +167,23 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                 controller: _passwordController,
                                 obscureText: obscureText,
                                 decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        obscureText = !obscureText;
-                                      });
-                                    },
-                                    child: obscureText ? const Icon(
-                                      Icons.visibility_off,
-                                      color: Colors.grey,
-                                    )
-                                    : const Icon(
-                                      Icons.visibility,
-                                      color:  Colors.black,
-                                    )
-                                  )
-                                ),
+                                    labelText: 'Password',
+                                    prefixIcon: Icon(Icons.lock),
+                                    suffixIcon: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            obscureText = !obscureText;
+                                          });
+                                        },
+                                        child: obscureText
+                                            ? const Icon(
+                                                Icons.visibility_off,
+                                                color: Colors.grey,
+                                              )
+                                            : const Icon(
+                                                Icons.visibility,
+                                                color: Colors.black,
+                                              ))),
                                 //obscureText: true,
                                 validator: (input) {
                                   if (input == null) return 'Enter Password';
@@ -210,22 +209,23 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                           "Forgot Passsword?",
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color:
-                                                  Colors.white //Color(0xFF267D43)
+                                              color: Colors
+                                                  .white //Color(0xFF267D43)
                                               ),
                                         ),
                                         onPressed: () {
-                                          if (_formkey.currentState!.validate()) {
-                                    // login(emailController.text, password.text);
-                                    print("Driver login");
-                                    _signInWithEmailAndPassword();
-                                    // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                    //     builder: (BuildContext context) => UserDeshboardScreen()));
-                                    // Navigator.of(context)
-                                    //     .push(MaterialPageRoute(builder: (_) => UserDeshboardScreen()));
-                                  } else {
-                                    print('Validation error');
-                                  }
+                                          if (_formkey.currentState!
+                                              .validate()) {
+                                            // login(emailController.text, password.text);
+                                            print("Driver login");
+                                            _signInWithEmailAndPassword();
+                                            // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                            //     builder: (BuildContext context) => UserDeshboardScreen()));
+                                            // Navigator.of(context)
+                                            //     .push(MaterialPageRoute(builder: (_) => UserDeshboardScreen()));
+                                          } else {
+                                            print('Validation error');
+                                          }
                                         },
                                       )),
                                 ),
@@ -244,8 +244,8 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                     // login(emailController.text, password.text);
                                     print("Driver login");
                                     _signInWithEmailAndPassword();
-                                    Navigator.of(context)
-          .push(MaterialPageRoute(builder: (_) => DriverProfileScreen()));
+                                    //                           Navigator.of(context)
+                                    // .push(MaterialPageRoute(builder: (_) => DriverProfileScreen()));
                                     // Navigator.of(context).pushReplacement(MaterialPageRoute(
                                     //     builder: (BuildContext context) => UserDeshboardScreen()));
                                     // Navigator.of(context)

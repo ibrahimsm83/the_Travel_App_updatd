@@ -396,17 +396,17 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                 totalDistance: widget.totalDistance,
                                 totalPrice: widget.totalPrice,
                                 dateTime: now,
-                                driverid:widget.phone,
+                                driverid: widget.phone,
                                 email: userEmail,
-                                userid:userEmail,
+                                userid: userEmail,
                                 flag: flag);
-                            String? token =
-                                "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
+                            // String? token =
+                            //     "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
                             _showNotification();
-                            FirebaseFirestore.instance
-                                .collection('UsersData')
-                                .doc(FirebaseAuth.instance.currentUser!.email)
-                                .set({}, SetOptions(merge: true));
+                            // FirebaseFirestore.instance
+                            //     .collection('UsersData')
+                            //     .doc(FirebaseAuth.instance.currentUser!.email)
+                            //     .set({}, SetOptions(merge: true));
                             // sendNotification('Trip', token!);
                             // _showMessageInScaffold("Ride Conform Successfully");
                             //add data end

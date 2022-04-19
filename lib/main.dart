@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:travelapp/Screens/splash_screen.dart';
 import 'blocs/application_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,14 +26,69 @@ Future<void> backgroundHandler(RemoteMessage message) async {
   print(message.notification!.title);
 }
 
+late AndroidNotificationChannel channel;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
       overlays: [SystemUiOverlay.bottom, SystemUiOverlay.top]);
-  await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
+  await Firebase.initializeApp();
   LocalNotificationService.initialize();
+//Permission
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  print('User granted permission: ${settings.authorizationStatus}');
+//chanel
+//  channel = const AndroidNotificationChannel(
+//       'high_importance_channel', // id
+//       'High Importance Notifications', // title
+//       'This channel is used for important notifications.', // description
+//       importance: Importance.high,
+//     );
+  channel = AndroidNotificationChannel(
+    'mychanel', // id
+    'High Importance Notifications', // title
+    description:
+        'This channel is used for important notifications', // description
+    importance: Importance.high,
+  );
+//chanel
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('app_notification_icon');
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    // iOS: initializationSettingsIOS,
+    // macOS: initializationSettingsMacOS,
+  );
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+  //on tap local notification
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String? payload) async {
+    Map<String, dynamic> _notificationData = {};
+    if (payload != null) {
+      debugPrint('notification payload: $payload');
+      print("paylod************************");
+      _notificationData = jsonDecode(payload);
+    }
+    // selectedNotificationPayload = payload;
+    // selectNotificationSubject.add(payload);
+  });
+//
   runApp(MyApp());
 }
 
@@ -49,6 +107,7 @@ class _MyAppState extends State<MyApp> {
 // 1. This method call when app in terminated state and you get a notification
     // when you click on notification app open from terminated state and you can get notification data in this method
     print("push notification");
+
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
         print(
@@ -72,11 +131,14 @@ class _MyAppState extends State<MyApp> {
     //App Push Notification
     FirebaseMessaging.onMessage.listen(
       (message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
         print("FirebaseMessaging.onMessage.listen 44444444444");
-        if (message.notification != null) {
+        if (notification != null && android != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print(message.notification!.title);
           print(message.notification!.body);
+          print("message  ${message}");
           print("message.data11 ${message.data}");
           // showDialog(
           //   context: context,
@@ -101,6 +163,7 @@ class _MyAppState extends State<MyApp> {
     //if you are sending a notification message, and you clicked the notification then the onMessageOpenedApp will be called.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       final routeFromMessage = message.data;
+      print('A new onMessageOpenedApp event was published!');
       LocalNotificationService.createanddisplaynotification(message);
       print(routeFromMessage);
       print('Message clicked!');
