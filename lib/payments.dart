@@ -21,7 +21,7 @@ class PaymentsPage extends StatefulWidget {
   final String name;
   final String phone;
   final String service;
-  final String? token;
+  //final String? token;
 
   PaymentsPage({
     required this.origin,
@@ -31,7 +31,7 @@ class PaymentsPage extends StatefulWidget {
     required this.name,
     required this.phone,
     required this.service,
-    this.token,
+    //this.token,
   });
   //const PaymentsPage({ Key? key }) : super(key: key);
 
@@ -68,7 +68,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   void initState() {
     print("Device token payment ");
-    print(widget.token);
+    //print(widget.token);
     super.initState();
     // var androidInitilize = new AndroidInitializationSettings('logo');
     // var iOSinit = new IOSInitializationSettings();

@@ -13,13 +13,13 @@ class PolyLinePointPage extends StatefulWidget {
   final String dname;
   final String dphone;
   final String dservices;
-  final String token;
+  //final String token;
 
   PolyLinePointPage({
     required this.dname,
     required this.dphone,
     required this.dservices,
-    required this.token,
+   // required this.token,
   });
   //const PolyLinePointPage({Key? key}) : super(key: key);
 
@@ -47,7 +47,7 @@ class _PolyLinePointPageState extends State<PolyLinePointPage> {
   @override
   void initState() {
     print("Device token ");
-    print(widget.token);
+    //print(widget.token);
     super.initState();
     setSourceAndDestinationIcons();
   }
@@ -251,7 +251,7 @@ class _PolyLinePointPageState extends State<PolyLinePointPage> {
                                 name: widget.dname,
                                 phone: widget.dphone,
                                 service: widget.dservices,
-                                token: widget.token,
+                               // token: widget.token,
                               ),
                             ),
                           );

@@ -129,6 +129,7 @@ class _MyAppState extends State<MyApp> {
       },
     );
     //App Push Notification
+    /*
     FirebaseMessaging.onMessage.listen(
       (message) {
         RemoteNotification? notification = message.notification;
@@ -159,6 +160,7 @@ class _MyAppState extends State<MyApp> {
         }
       },
     );
+    */
     //background state
     //if you are sending a notification message, and you clicked the notification then the onMessageOpenedApp will be called.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {

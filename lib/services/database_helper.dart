@@ -37,13 +37,19 @@ class Database {
       "servicetype": servicetype,
       "latitude": latitude,
       "longitude": longitude,
-      "token": token,
+      //"token": token,
     };
 //add data
     await documentReferencer
         .set(data)
         .whenComplete(() => print("Note item added to the database"))
         .catchError((e) => print(e));
+
+    await _mainCollection
+        .doc(phono)
+        .collection('tokens')
+        .doc(token)
+        .set({"tokens": token});
   }
 
 //add Daily Rides Details

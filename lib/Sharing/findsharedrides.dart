@@ -696,7 +696,7 @@ class SharingScreenState extends State<SharingScreen> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                            token: "",
+                                            //token: "",
                                           )));
 
                               //send cu
@@ -739,7 +739,7 @@ class SharingScreenState extends State<SharingScreen> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                            token: "",
+                                           // token: "",
                                           )));
                             },
                             child: Container(

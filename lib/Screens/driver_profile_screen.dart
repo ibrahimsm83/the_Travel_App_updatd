@@ -12,8 +12,6 @@ import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:travelapp/services/local_push_notification.dart';
 
-
-
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({Key? key}) : super(key: key);
 
@@ -22,8 +20,6 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
-  
-
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -35,9 +31,47 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   void initState() {
-   
+    print("init state call");
     //getCurrentLocation();
     getStringValuesSF();
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        print("FirebaseMessaging.onMessage.listen 44444444444");
+        if (notification != null && android != null) {
+          LocalNotificationService.createanddisplaynotification(message);
+          print(message.notification!.title);
+          print(message.notification!.body);
+          print("message  ${message}");
+          print("message.data11 ${message.data}");
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              content: ListTile(
+                title: Text(message.notification!.title.toString()),
+                subtitle: Text(message.notification!.body.toString()),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                    color: Colors.amber,
+                    child: Text('Ok'),
+                    onPressed: () {
+                      print("ok taped");
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DriverMainPage()),
+                      );
+                      //DriverMainPage();
+                      // Navigator.of(context).pop();
+                    }),
+              ],
+            ),
+          );
+        }
+      },
+    );
     // 1. This method call when app in terminated state and you get a notification
     // when you click on notification app open from terminated state and you can get notification data in this method
 /*

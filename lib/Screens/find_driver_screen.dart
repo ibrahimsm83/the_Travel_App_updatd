@@ -150,7 +150,8 @@ class CustomemapPageState extends State<CustomemapPage> {
                               clongitude,
                               snapshot.data!.docs[i]['Email'],
                               snapshot.data!.docs[i]['services'],
-                              snapshot.data!.docs[i]['token']);
+                              //snapshot.data!.docs[i]['token']
+                              );
                         },
                         icon: sourceIcon));
                   }
@@ -257,7 +258,8 @@ class CustomemapPageState extends State<CustomemapPage> {
                         clongitude,
                         snapshot.data!.docs[i]['Email'],
                         snapshot.data!.docs[i]['services'],
-                        snapshot.data!.docs[i]['token']);
+                       // snapshot.data!.docs[i]['token']
+                        );
                     // print("${snapshot.data.docs[i]['address']}");
                     // print("${snapshot.data.docs[i]['phoneno']}");
                   },
@@ -627,7 +629,7 @@ class CustomemapPageState extends State<CustomemapPage> {
     dynamic currentlongi,
     dynamic memail,
     dynamic services,
-    dynamic token,
+    //dynamic token,
   ) {
     showModalBottomSheet(
         context: context,
@@ -734,7 +736,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                            token: token,
+                                           // token: token,
                                           )));
 
                               //send cu
@@ -778,7 +780,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                            token: token,
+                                           // token: token,
                                           )));
                             },
                             child: Container(

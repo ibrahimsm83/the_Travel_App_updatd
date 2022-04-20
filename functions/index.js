@@ -10,45 +10,38 @@ const admin=require('firebase-admin');
 admin.initializeApp(functions.config().firestore);
 //db use for data get from firebase
 var db=admin.firestore();
-var fcm=admin.messaging();
+//var fcm=admin.messaging();
 
-// _firestore
-//         .collection('Drivers')
-//         .doc('03054601122')
-//         .get()
-//         .then((value) => print(" ******************** dsfds        ///////${value.data()?["services"]}"));
-
-exports.notifyNewMessage = functions.firestore.document('DailyRides/{dailyrideid}').onCreate(async(snapshot)=>{
+exports.notifyNewMessage = functions.firestore.document("/DailyRides/{dailyrideid}").onCreate(async(snapshot,context)=>{
   if(snapshot.empty){
     console.log("no device");
     return;
   }
-  const message=snapshot.data;
-  //print("driver data----------------");
-  //print(message.driverid)
-  //const token="dIbRAFexSgOUFYTqbwuYgg:APA91bFXUcYTD0jmxeMEEjRAFFvjbYwWJSdrNYr-KSkoyZ_vRXo5tiBnMQVJBqwz19gTAciP5-wpFuweNWXgMosFcLMRLitf0lifR_ijauD6rxmltnoQu2tXSpblJSlNwQqjJ6zEodMe";
-  const token=db.collection('Drivers').doc(message.driverid).get().then((value)=>value.data().token);
-  // const token=db.collection('Drivers').doc(message.driverid).get().then((value)=>value.data()["token"]);
-  //const token1="f9Qtc3buQ0K2fNmy8LQzHg:APA91bFgA6pgmUfEOJVQtaFGtFI9OyXU4jWBD5FzET_FoB-_C00IMoFl9aesyx8yEpLUDinV-bA-hSFMdosaH3O8Jmc2kShZPuV923ql5bsDDR5i1-U0m1uG-uwuuvWG605mfMOgDvHX";
-  // console.log("device token****************");
-  
+  const message=snapshot.data();
+ const querySnapshot=db.collection('Drivers').doc(message.driverid).collection('tokens').get();
+ const token=(await querySnapshot).docs.map((snap)=>snap.id);
   // console.log(token);
    // Notification details.
    const payload = {
     notification: {
-        title: "new ride",
-        body: "Request",
+        title: "The Travel App",
+        body: message.from,
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
         priority: "high",
         sound: 'default',
     },
+    
   };
-   try{
-const response=fcm.messaging().sendToDevice(token,payload);
+  // try{
+// //const response=fcm.sendToDevice(token1,payload);
+// admin.messaging() 
+// const response=fcm.sendToDevice(token1,payload);
 // console.log("Notification send successfully ");
-   } catch (err){
-   // console.log("Error sending Notification.");
-   }
+//    } catch (err){
+//     console.log(err.message);
+//     console.log(err.messaging);
+//     console.log("Error sending Notification.");
+//    }
     // data: {
     //     'title': 'You have new message(s)',
     //     'body': 'New message(s) recieved.',
@@ -57,7 +50,7 @@ const response=fcm.messaging().sendToDevice(token,payload);
     // },
 
 //};
-//return fcm.sendToDevice(token,payload)
+return admin.messaging().sendToDevice(token,payload);
 }
 );
 
