@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart' as loc;
 import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/login_driver_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
+import 'package:travelapp/widgets/custome_snackbar.dart';
 
 //import 'package:meconline/HomePage.dart';
 //Saving Token
@@ -39,18 +42,50 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
   String? longitude;
   //loaction
   void getCurrentLocation() async {
-    var position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    var lat = position.latitude;
-    var long = position.longitude;
+    try {
+      var permission = await Geolocator.checkPermission();
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Location services are not enabled don't continue
+        // accessing the position and request users of the
+        // App to enable the location services.
+        await loc.Location().requestService();
+        return Future.error('Location services are disabled.');
+      }
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        print("permission check");
+        print(permission);
+        if (permission == LocationPermission.denied) {
+          // Permissions are denied, next time you could try
+          // requesting permissions again (this is also where
+          // Android's shouldShowRequestPermissionRationale
+          // returned true. According to Android guidelines
+          // your App should show an explanatory UI now.
+          return Future.error('Location permissions are denied');
+        }
+      }
+      var status = await Permission.locationWhenInUse.serviceStatus.isEnabled;
+      //print("location permission");
+      // print(status);
+      if (status) {
+        var position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high);
+        var lat = position.latitude;
+        var long = position.longitude;
 
-    // passing this to latitude and longitude strings
+        // passing this to latitude and longitude strings
 
-    setState(() {
-      latitude = "$lat";
-      longitude = "$long";
-      locationMessage = "Latitude: $lat and Longitude: $long";
-    });
+        setState(() {
+          latitude = "$lat";
+          longitude = "$long";
+          locationMessage = "Latitude: $lat and Longitude: $long";
+        });
+      }
+    } catch (e) {
+      print("catch*************************");
+      CustomSnacksBar.showSnackBar(context, e.toString());
+    }
   }
 
   late String _token;

@@ -4,8 +4,12 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/splash_screen.dart';
+import 'package:travelapp/widgets/custome_snackbar.dart';
 import 'blocs/application_bloc.dart';
+import 'package:location/location.dart' as loc;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -26,6 +30,45 @@ Future<void> backgroundHandler(RemoteMessage message) async {
   print(message.notification!.title);
 }
 
+void getCurrentLocation() async {
+  try {
+    var permission = await Geolocator.checkPermission();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      await loc.Location().requestService();
+      return Future.error('Location services are disabled.');
+    }
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      print("permission check");
+      print(permission);
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+    var status = await Permission.locationWhenInUse.serviceStatus.isEnabled;
+    //print("location permission");
+    // print(status);
+    if (status) {
+      var position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+
+      // passing this to latitude and longitude strings
+
+    }
+  } catch (e) {
+    print("catch***************error**********");
+  }
+}
+
 late AndroidNotificationChannel channel;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +78,7 @@ void main() async {
   await Firebase.initializeApp();
   LocalNotificationService.initialize();
 //Permission
+  getCurrentLocation();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   NotificationSettings settings = await messaging.requestPermission(
@@ -170,15 +214,6 @@ class _MyAppState extends State<MyApp> {
       print(routeFromMessage);
       print('Message clicked!');
     });
-    // onLaunch: (Map<String, dynamic> message) async {
-    //       print("onLaunch: $message");
-    //       // TODO optional
-    //     },
-    //     onResume: (Map<String, dynamic> message) async {
-    //       print("onResume: $message");
-    //       // TODO optional
-    //     },
-    //);
   }
 
   @override

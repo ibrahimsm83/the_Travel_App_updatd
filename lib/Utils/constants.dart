@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 //Color(0xFF21BFBD),
 Color primaryColor = Color(0xFF21BFBD);
+Color REDcolor = Color(0xFFC72C2C);
 Color SecondryColor = Color(0xfff6f6f6);
 Color fb_btnColor = Color(0xff3b5998);
 Color text_Color = Color(0xff808080);
