@@ -12,6 +12,7 @@ import 'blocs/application_bloc.dart';
 import 'package:location/location.dart' as loc;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:sizer/sizer.dart';
 
 //import 'home.dart';
 import 'bottomnav.dart';
@@ -219,12 +220,15 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ApplicationBloc(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-      ),
-    );
+        create: (context) => ApplicationBloc(),
+        child: Sizer(
+          builder: (context, orientation, deviceType) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              home: SplashScreen(),
+            );
+          },
+        ));
   }
 
   /// Get the token, save it to the database for current user

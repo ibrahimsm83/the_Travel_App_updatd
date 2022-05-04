@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp/bottomnav.dart';
-import 'package:travelapp/home.dart';
 
+// ignore: must_be_immutable
 class BookedRide extends StatefulWidget {
   String pick;
   String drop;

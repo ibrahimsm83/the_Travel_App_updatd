@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travelapp/Screens/available_ride_sharing_screen.dart';
 import 'package:travelapp/Screens/event_seat_screen.dart';
 import 'package:travelapp/Sharing/findsharedrides.dart';
 import 'Screens/find_driver_screen.dart';
@@ -165,7 +166,8 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      PolyLinePointPage(),
+                                                      AvailableRidePage(),
+                                                  // PolyLinePointPage(),
                                                 ),
                                               );
                                             },

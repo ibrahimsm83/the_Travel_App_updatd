@@ -6,6 +6,8 @@ Color REDcolor = Color(0xFFC72C2C);
 Color SecondryColor = Color(0xfff6f6f6);
 Color fb_btnColor = Color(0xff3b5998);
 Color text_Color = Color(0xff808080);
+const errorColor = Colors.red;
+const greyColor = Colors.grey;
 Color white_Color = Color(0xffFFFFFF);
 Color interchatbg_color = Color(0xfffcdbd0);
 //Colors.grey[400]
