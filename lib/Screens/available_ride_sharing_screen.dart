@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:travelapp/Screens/pickup_list.dart';
 import 'package:travelapp/Utils/constants.dart';
 
 class AvailableRidePage extends StatefulWidget {
@@ -23,18 +24,17 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
 
   void values() {
     _locationList = [];
-
     _locationList.add(" Malir Cantt > M.T Khan Road");
     _locationList.add("Buffer Zone > Clifton");
     _locationList.add("Malir Cantt >Clifton");
     _locationList.add("4k Bus Stop > Clifton");
-    _locationList.add("Buffer Zone > M.T Khan Road");
-    _locationList.add("Malir Cantt > Clifton");
-    _locationList.add("FB Area > M.T Khan Road");
-    _locationList.add("North Karachi >Clifton");
-    _locationList.add("North Karachi > M.T Khan Road");
-    _locationList.add("North Nazimabad > Orangi Town");
-    _locationList.add("Paf Kiet Main Campus > City Campus");
+    // _locationList.add("Buffer Zone > M.T Khan Road");
+    // _locationList.add("Malir Cantt > Clifton");
+    // _locationList.add("FB Area > M.T Khan Road");
+    // _locationList.add("North Karachi >Clifton");
+    // _locationList.add("North Karachi > M.T Khan Road");
+    // _locationList.add("North Nazimabad > Orangi Town");
+    // _locationList.add("Paf Kiet Main Campus > City Campus");
   }
 
   @override
@@ -55,9 +55,7 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
                   controller: _controller,
-                  style: new TextStyle(
-                    color: Colors.black,
-                  ),
+                  style: new TextStyle(color: Colors.black),
                   decoration: new InputDecoration(
                     contentPadding: EdgeInsets.fromLTRB(14, 14.0, 0, 14.0),
                     suffixIcon: new Icon(Icons.search, color: Colors.grey),
@@ -110,18 +108,19 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
                         itemBuilder: (BuildContext context, int index) {
                           String listData = searchresult[index];
                           return InkWell(
-                              // onTap: () => Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             IncludeSomeDetailsPage())),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PickupListPg(
+                                          pickuplist: pickup1,
+                                          dropofflist: dropoff1))),
                               child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              listData.toString(),
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ));
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                  listData.toString(),
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ));
                         },
                       )
                     : new ListView.separated(
@@ -132,11 +131,15 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
                         itemBuilder: (BuildContext context, int index) {
                           String listData = _locationList[index];
                           return InkWell(
-                            // onTap: () => Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) =>
-                            //             IncludeSomeDetailsPage())),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PickupListPg(
+                                  pickuplist: pickup[index],
+                                  dropofflist: dropoff[index],
+                                ),
+                              ),
+                            ),
                             child: Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: new Text(listData.toString(),

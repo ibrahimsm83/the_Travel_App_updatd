@@ -1,17 +1,48 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:travelapp/bottomnav.dart';
+import 'package:travelapp/models/sharing_ride_model.dart';
 
 // ignore: must_be_immutable
 class BookedRide extends StatefulWidget {
-  String pick;
-  String drop;
-  BookedRide ({ Key? key,required this.pick,required this.drop}) : super(key: key);
+  SharingRideModel? pick;
+  SharingRideModel? drop;
+  BookedRide({Key? key, required this.pick, required this.drop})
+      : super(key: key);
 
   @override
   _BookedRideState createState() => _BookedRideState();
 }
 
 class _BookedRideState extends State<BookedRide> {
+  dynamic totaldis = 0;
+  int count = 1;
+  @override
+  void initState() {
+    
+    calculateDistance(widget.pick!.latitude!, widget.pick!.longitude!,
+        widget.drop!.latitude!, widget.drop!.longitude!);
+    super.initState();
+  }
+
+  //Calculate Distance in Km
+  void calculateDistance(
+      _originLatitude, _originLongitude, _destLatitude, _destLongitude) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((_destLatitude - _originLatitude) * p) / 2 +
+        c(_originLatitude * p) *
+            c(_destLatitude * p) *
+            (1 - c((_destLongitude - _originLongitude) * p)) /
+            2;
+    var dis = 12742 * asin(sqrt(a));
+    setState(() {
+      totaldis = dis.truncate();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,80 +88,207 @@ class _BookedRideState extends State<BookedRide> {
               )),
           SizedBox(height: 20.0),
           Container(
-              height: MediaQuery.of(context).size.height - 135.0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40.0),
-                    topRight: Radius.circular(40.0)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          top: 40.0, left: 20.0, right: 20.0),
-                      child: Text(
-                        "Your Ride has been confirmed",
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontSize: 25.0,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.left,
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 20.0, right: 20.0),
-                      child: Text(
-                        "From",
-                        style: TextStyle(
+            height: MediaQuery.of(context).size.height - 135.0,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40.0),
+                  topRight: Radius.circular(40.0)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 40.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "Your Ride has been confirmed",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "From",
+                      style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 18.0,
-                          fontWeight: FontWeight.bold
-                        ),
-                        textAlign: TextAlign.left,
-                      )
-                    ),
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      widget.pick!.address!,
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "To",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      widget.drop!.address!,
+                      // widget.drop,
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "KM",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      totaldis.toString(),
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+                //
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "No Of Passengers",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Row(
+                  children: [
+                    // Padding(
+                    //     padding: const EdgeInsets.only(
+                    //         top: 20.0, left: 20.0, right: 20.0),
+                    //     child: Text(
+                    //       "1",
+                    //       style: TextStyle(
+                    //         fontFamily: 'Montserrat',
+                    //         fontSize: 18.0,
+                    //       ),
+                    //       textAlign: TextAlign.left,
+                    //     )),
                     Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 20.0, right: 20.0),
-                      child: Text(
-                        widget.pick,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 18.0,
-                        ),
-                        textAlign: TextAlign.left,
-                      )
-                    ),
+                      padding: const EdgeInsets.only(top: 0.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Text(
+                          //   "No of Passengers :",
+                          //   style: TextStyle(
+                          //     fontFamily: 'Montserrat',
+                          //     fontSize: 17.0,
+                          //   ),
+                          // ),
+                          MaterialButton(
+                            onPressed: () {
+                              if (count >= 1 && count <= 2 && count != 2) {
+                                setState(() {
+                                  count++;
+                                });
+                              }
+                            },
+                            child: Text(
+                              '+',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            shape: const CircleBorder(),
+                            color: Colors.grey[800],
+                          ),
+                          Text(
+                            '$count',
+                            style: TextStyle(
+                              fontFamily: 'Montserrat',
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          MaterialButton(
+                            onPressed: () {
+                              if ((count >= 1) && (count <= 2) && count != 1) {
+                                setState(() {
+                                  count--;
+                                });
+                              }
+                            },
+                            child: Text(
+                              '-',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            shape: const CircleBorder(),
+                            color: Colors.grey[800],
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
 
-                  Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 20.0, right: 20.0),
-                      child: Text(
-                        "To",
-                        style: TextStyle(
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      "Total Price",
+                      style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 18.0,
-                          fontWeight: FontWeight.bold
-                        ),
-                        textAlign: TextAlign.left,
-                      )
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 20.0, left: 20.0, right: 20.0),
-                      child: Text(
-                        widget.drop,
-                        style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontSize: 18.0,
-                        ),
-                        textAlign: TextAlign.left,
-                      )
-                    ),
-                ],
-              ))
+                          fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.left,
+                    )),
+                Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20.0, left: 20.0, right: 20.0),
+                    child: Text(
+                      (((totaldis * 15) + 80) * count).toString(),
+                      style: TextStyle(
+                        fontFamily: 'Montserrat',
+                        fontSize: 18.0,
+                      ),
+                      textAlign: TextAlign.left,
+                    )),
+              ],
+            ),
+          )
         ],
       ),
     );
