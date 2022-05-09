@@ -10,6 +10,7 @@ import 'package:travelapp/rideconfirmed.dart';
 import 'package:travelapp/services/database_helper.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:travelapp/widgets/custome_snackbar.dart';
 //import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:number_inc_dec/number_inc_dec.dart';
 
@@ -373,9 +374,9 @@ class _PaymentsPageState extends State<PaymentsPage> {
                         thickness: 1,
                         color: Colors.black,
                       ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10.0, left: 70.0),
+                      SizedBox(height: 20.0),
+                      Align(
+                        alignment: Alignment.topCenter,
                         child: ElevatedButton(
                           onPressed: () async {
                             setState(() {
@@ -400,9 +401,12 @@ class _PaymentsPageState extends State<PaymentsPage> {
                                 email: userEmail,
                                 userid: userEmail,
                                 flag: flag);
+                            CustomSnacksBar.showSnackBar(
+                                context, "Request Send Successfully");
+                            // _showMessageInScaffold("Request Send Successfully");
                             // String? token =
                             //     "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
-                            _showNotification();
+                            // _showNotification();
                             // FirebaseFirestore.instance
                             //     .collection('UsersData')
                             //     .doc(FirebaseAuth.instance.currentUser!.email)
@@ -410,11 +414,14 @@ class _PaymentsPageState extends State<PaymentsPage> {
                             // sendNotification('Trip', token!);
                             // _showMessageInScaffold("Ride Conform Successfully");
                             //add data end
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => RideConfirmed()),
-                            );
+                            Future.delayed(Duration(seconds: 5), () {
+                              // 5s over, navigate to a new page
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RideConfirmed()),
+                              );
+                            });
                           },
                           child: Padding(
                             padding: const EdgeInsets.only(

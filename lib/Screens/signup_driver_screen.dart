@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/login_driver_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
+import 'package:travelapp/Utils/extensions.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:travelapp/widgets/custome_snackbar.dart';
 
@@ -274,8 +275,12 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                 decoration: InputDecoration(
                                     labelText: 'Email',
                                     prefixIcon: Icon(Icons.email)),
-                                validator: (input) {
-                                  if (input == null) return 'Enter Email';
+                                validator: (String? v) {
+                                  if (v!.isValidEmail) {
+                                    return null;
+                                  } else {
+                                    return "Please enter a valid email";
+                                  }
                                 },
                               ),
                             ),
@@ -288,8 +293,12 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                   prefixIcon: Icon(Icons.lock),
                                 ),
                                 obscureText: true,
-                                validator: (input) {
-                                  if (input == null) return 'Enter password';
+                                validator: (String? v) {
+                                  if (v!.isValidPassword) {
+                                    return null;
+                                  } else {
+                                    return "Password must contain an uppercase, lowercase, numeric digit and special character ";
+                                  }
                                 },
                               ),
                             ),

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:travelapp/Screens/login_user_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
+import 'package:travelapp/Utils/extensions.dart';
 import 'package:travelapp/services/database_helper.dart';
 
 //import 'package:meconline/HomePage.dart';
@@ -138,23 +139,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   Container(
                                     child: TextFormField(
                                         // ignore: missing_return
-                                        validator: (input) {
-                                          if (input == null)
-                                            return 'Enter Email';
+                                        //Please enter a valid email
+                                        validator: (String? v) {
+                                          if (v!.isValidEmail) {
+                                            return null;
+                                          } else {
+                                            return "Please enter a valid email";
+                                          }
                                         },
                                         controller: email,
                                         decoration: InputDecoration(
                                             labelText: 'Email',
                                             prefixIcon: Icon(Icons.email)),
-                                        onSaved: (input) => _email = input),
+                                        onSaved: (input) => _email = input
+                                        ),
                                   ),
 
                                   Container(
                                     child: TextFormField(
-                                        // ignore: missing_return
-                                        validator: (String? input) {
-                                          if (input == null)
-                                            return 'Enter Password';
+                                        validator: (String? v) {
+                                          if (v!.isValidPassword) {
+                                            return null;
+                                          } else {
+                                            return "Password must contain an uppercase, lowercase, numeric digit and special character ";
+                                          }
                                         },
                                         controller: password,
                                         decoration: InputDecoration(

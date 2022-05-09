@@ -6,11 +6,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sizer/sizer.dart';
 import 'package:travelapp/Driver/driver_main_page.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:travelapp/services/local_push_notification.dart';
+import 'package:travelapp/widgets/custome_button.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   const DriverProfileScreen({Key? key}) : super(key: key);
@@ -45,28 +47,112 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           print(message.notification!.body);
           print("message  ${message}");
           print("message.data11 ${message.data}");
+          // showDialog(
+          //   context: context,
+          //   builder: (context) => AlertDialog(
+          //     content: ListTile(
+          //       title: Text(message.notification!.title.toString()),
+          //       subtitle: Text(message.notification!.body.toString()),
+          //     ),
+          //     actions: <Widget>[
+          //       FlatButton(
+          //           color: Colors.amber,
+          //           child: Text('Ok'),
+          //           onPressed: () {
+          //             print("ok taped");
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                builder: (context) => DriverMainPage()),
+          //             );
+          //             //DriverMainPage();
+          //             // Navigator.of(context).pop();
+          //           }),
+          //     ],
+          //   ),
+          // );
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              content: ListTile(
-                title: Text(message.notification!.title.toString()),
-                subtitle: Text(message.notification!.body.toString()),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              actions: <Widget>[
-                FlatButton(
-                    color: Colors.amber,
-                    child: Text('Ok'),
-                    onPressed: () {
-                      print("ok taped");
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DriverMainPage()),
-                      );
-                      //DriverMainPage();
-                      // Navigator.of(context).pop();
-                    }),
-              ],
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "New Ride Request",
+                      style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Divider(thickness: 2.0),
+                  SizedBox(height: 5.0),
+                  Row(
+                    children: [
+                      Icon(Icons.location_on),
+                      SizedBox(width: 5.0),
+                      Flexible(
+                        child: Text(
+                          message.notification!.body.toString(),
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Icon(Icons.location_city),
+                      SizedBox(width: 5.0),
+                      Flexible(
+                        child: Text(
+                          "Destination Location Addressdsf ajlfsla faslk f;lasflsaf asfl;saf;",
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontSize: 12.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10.0),
+                  Divider(thickness: 2.0),
+                  SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: CustomeButton(
+                      text: "ACCEPT",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DriverMainPage()),
+                        );
+                      },
+                      color: Colors.blue,
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: CustomeButton(
+                      text: "CANCEL",
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -285,15 +371,15 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           children: [
             SizedBox(height: 50.0),
             RichText(
-                text: TextSpan(
-                    text: 'Welcome to ',
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                    ),
-                    children: <TextSpan>[
+              text: TextSpan(
+                text: 'Welcome to ',
+                style: TextStyle(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontFamily: 'Montserrat',
+                ),
+                children: <TextSpan>[
                   TextSpan(
                       text: 'Travel App ',
                       style: TextStyle(
@@ -302,7 +388,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                         color: Colors.black,
                         fontFamily: 'Montserrat',
                       ))
-                ])),
+                ],
+              ),
+            ),
             SizedBox(height: 150.0),
             Container(
               //color: Colors.amber,
@@ -352,53 +440,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               thickness: 1,
               color: Colors.black,
             ),
-            // FlatButton(
-            //   color: Colors.white,
-            //   onPressed: () {
-            //     getCurrentLocation();
-            //   },
-            //   child: Text("Get User Location"),
-            // ),
-            SizedBox(
-              height: 30.0,
-            ),
-            // Text(
-            //   locationMessage,
-            //   style: TextStyle(
-            //     color: Colors.white,
-            //   ),
-            // ),
-            /* Container(
-              margin: EdgeInsets.only(left: 10),
-              height: 40,
-              //width: 400,
-              //color: primaryColor,
-              padding: EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    color: Colors.white,
-                    child: Checkbox(
 
-                      value: _checkbox,
-                      onChanged: (value) {
-                        setState(() {
-                          _checkbox = !_checkbox;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(width: 20,),
-                  Text('Show all Mechanics',
-                    style: TextStyle(color: Colors.white),),
-                ],
-              ),
-            ),*/
-            SizedBox(
-              height: 10.0,
-            ),
+            SizedBox(height: 30.0),
+
+            SizedBox(height: 10.0),
             //Login Buttons
             Container(
                 width: sizeWidth(context),

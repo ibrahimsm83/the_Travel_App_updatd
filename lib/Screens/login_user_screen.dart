@@ -144,10 +144,7 @@ class _LoginPageState extends State<LoginPage> {
                             Container(
                               color: Colors.white,
                               child: TextFormField(
-                                  // ignore: missing_return
-                                  // validator: (input) {
-                                  //   if (input.isEmpty) return 'Enter Email';
-                                  // },
+                                
                                   validator: (input) {
                                     if (input == null) return 'Enter Email';
                                   },
