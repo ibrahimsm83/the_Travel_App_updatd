@@ -1,8 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/bottomnav.dart';
 import 'package:travelapp/models/sharing_ride_model.dart';
+import 'package:travelapp/widgets/custome_button.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 // ignore: must_be_immutable
 class BookedRide extends StatefulWidget {
@@ -20,7 +24,6 @@ class _BookedRideState extends State<BookedRide> {
   int count = 1;
   @override
   void initState() {
-    
     calculateDistance(widget.pick!.latitude!, widget.pick!.longitude!,
         widget.drop!.latitude!, widget.drop!.longitude!);
     super.initState();
@@ -286,6 +289,23 @@ class _BookedRideState extends State<BookedRide> {
                       ),
                       textAlign: TextAlign.left,
                     )),
+                //sd
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 12.w, vertical: 20.0),
+                  child: CustomeButton(
+                    text: "Add Review & Rating",
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible:
+                            true, // set to false if you want to force a rating
+                        builder: (context) => _dialog,
+                      );
+                    },
+                    color: Colors.grey.shade800,
+                  ),
+                )
               ],
             ),
           )
@@ -293,4 +313,42 @@ class _BookedRideState extends State<BookedRide> {
       ),
     );
   }
+
+  final _dialog = RatingDialog(
+    initialRating: 1.0,
+    // your app's name?
+    title: Text(
+      'Rating Dialog',
+      textAlign: TextAlign.center,
+      style: const TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+    // encourage your user to leave a high rating?
+    // message: Text(
+    //   'Tap a star to set your rating. Add more description here if you want.',
+    //   textAlign: TextAlign.center,
+    //   style: const TextStyle(fontSize: 15),
+    // ),
+    // your app's logo?
+    //image: const FlutterLogo(size: 100),
+    submitButtonText: 'Submit',
+    commentHint: 'Set your custom comment hint',
+    onCancelled: () => print('cancelled'),
+    onSubmitted: (response) {
+      print('rating: ${response.rating}, comment: ${response.comment}');
+
+      // TODO: add your own logic
+      if (response.rating < 3.0) {
+        //save firebase
+        print(response.rating);
+        print(response.comment);
+        // send their comments to your email or anywhere you wish
+        // ask the user to contact you instead of leaving a bad review
+      } else {
+        //_rateAndReviewApp();
+      }
+    },
+  );
 }

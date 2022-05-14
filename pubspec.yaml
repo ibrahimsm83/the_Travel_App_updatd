@@ -32,6 +32,7 @@ dependencies:
   location: ^4.3.0
   another_flushbar: ^1.10.28
   flutter_polyline_points: ^1.0.0
+  rating_dialog: ^2.0.4
   google_maps_flutter: ^2.0.9
   firebase_core: ^1.7.0
   sizer: ^2.0.15

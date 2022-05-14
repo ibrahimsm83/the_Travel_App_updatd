@@ -25,12 +25,11 @@ exports.notifyNewMessage = functions.firestore.document("/DailyRides/{dailyridei
    const payload = {
     notification: {
         title: "The Travel App",
-        body: message.from,
+        body:message.userid,
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
         priority: "high",
         sound: 'default',
     },
-    
   };
   // try{
 // //const response=fcm.sendToDevice(token1,payload);

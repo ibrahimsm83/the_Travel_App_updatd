@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:travelapp/Driver/driver_main_page.dart';
+import 'package:travelapp/Driver/driver_main_page1.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
@@ -44,117 +46,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         if (notification != null && android != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print(message.notification!.title);
-          print(message.notification!.body);
-          print("message  ${message}");
+          // print(message.notification!.body);
+          // print("message  ${message}");
           print("message.data11 ${message.data}");
-          // showDialog(
-          //   context: context,
-          //   builder: (context) => AlertDialog(
-          //     content: ListTile(
-          //       title: Text(message.notification!.title.toString()),
-          //       subtitle: Text(message.notification!.body.toString()),
-          //     ),
-          //     actions: <Widget>[
-          //       FlatButton(
-          //           color: Colors.amber,
-          //           child: Text('Ok'),
-          //           onPressed: () {
-          //             print("ok taped");
-          //             Navigator.push(
-          //               context,
-          //               MaterialPageRoute(
-          //                builder: (context) => DriverMainPage()),
-          //             );
-          //             //DriverMainPage();
-          //             // Navigator.of(context).pop();
-          //           }),
-          //     ],
-          //   ),
-          // );
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "New Ride Request",
-                      style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Divider(thickness: 2.0),
-                  SizedBox(height: 5.0),
-                  Row(
-                    children: [
-                      Icon(Icons.location_on),
-                      SizedBox(width: 5.0),
-                      Flexible(
-                        child: Text(
-                          message.notification!.body.toString(),
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10.0),
-                  Row(
-                    children: [
-                      Icon(Icons.location_city),
-                      SizedBox(width: 5.0),
-                      Flexible(
-                        child: Text(
-                          "Destination Location Addressdsf ajlfsla faslk f;lasflsaf asfl;saf;",
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontSize: 12.sp,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 10.0),
-                  Divider(thickness: 2.0),
-                  SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: CustomeButton(
-                      text: "ACCEPT",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => DriverMainPage()),
-                        );
-                      },
-                      color: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: CustomeButton(
-                      text: "CANCEL",
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      color: Colors.red,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+          getdailyrideData(message.notification!.body);
         }
       },
     );
@@ -206,6 +101,129 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     super.initState();
   }
 
+  String from = "";
+  String destination = "";
+  void getdailyrideData(String? rideId) {
+    FirebaseFirestore.instance
+        .collection('DailyRides')
+        .doc(rideId)
+        .get()
+        .then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      setState(() {
+        from = fields!['from'];
+        destination = fields['destination'];
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "New Ride Request",
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Divider(thickness: 2.0),
+              SizedBox(height: 5.0),
+              Row(
+                children: [
+                  Icon(Icons.location_on),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields!['from'],
+                      // message.notification!.body![0].toString(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Icon(Icons.location_city),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields['destination'],
+                      // message.notification!.body![1].toString(),
+                      //"Destination Location Addressdsf ajlfsla faslk f;lasflsaf asfl;saf;",
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Divider(thickness: 2.0),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "ACCEPT",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => DriverMapPage()),
+                    );
+                  },
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "CANCEL",
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  getlatLon() async {
+    print("geolatlon called");
+    try {
+      List<Location> locations = await locationFromAddress(
+          "Karachi Cantt Railway Station, Doctor Daud Pota Road, Karachi Cantonment Karachi, Pakistan");
+      print("Latitude: ${locations[0].latitude}");
+      print("Longitude: ${locations[0].longitude}");
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+          locations[0].latitude, locations[0].longitude);
+      // Address address = await geoCode.reverseGeocoding(latitude: 33.691993, longitude: 73.0480956);
+      print(placemarks);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   var locationMessage = '';
   String? latitude;
   String? longitude;
@@ -227,6 +245,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // getlatLon();
     bool _checkbox = false;
 
     final double btnmargsize = MediaQuery.of(context).size.width * 0.09;
@@ -465,7 +484,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => DriverMainPage()),
+                      MaterialPageRoute(builder: (context) => DriverMapPage()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
