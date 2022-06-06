@@ -58,7 +58,8 @@ class _BookedRideState extends State<BookedRide> {
             children: [
               IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => BottomNav()));
                 },
                 icon: Icon(Icons.arrow_back_ios),
                 color: Colors.white,
@@ -218,14 +219,14 @@ class _BookedRideState extends State<BookedRide> {
                           // ),
                           MaterialButton(
                             onPressed: () {
-                              if (count >= 1 && count <= 2 && count != 2) {
+                              if ((count >= 1) && (count <= 2) && count != 1) {
                                 setState(() {
-                                  count++;
+                                  count--;
                                 });
                               }
                             },
                             child: Text(
-                              '+',
+                              '-',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.0,
@@ -244,14 +245,14 @@ class _BookedRideState extends State<BookedRide> {
                           ),
                           MaterialButton(
                             onPressed: () {
-                              if ((count >= 1) && (count <= 2) && count != 1) {
+                              if (count >= 1 && count <= 2 && count != 2) {
                                 setState(() {
-                                  count--;
+                                  count++;
                                 });
                               }
                             },
                             child: Text(
-                              '-',
+                              '+',
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.0,
@@ -261,6 +262,7 @@ class _BookedRideState extends State<BookedRide> {
                             shape: const CircleBorder(),
                             color: Colors.grey[800],
                           ),
+                          
                         ],
                       ),
                     )

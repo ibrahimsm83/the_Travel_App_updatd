@@ -24,18 +24,13 @@ class DriverProfileScreen extends StatefulWidget {
 }
 
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color(0xFF21BFBD),
-//       body:Center(child: Text("Support")),
-//     );
-//   }
-// }
-
+  double _originLatitude = 0.0, _originLongitude = 0.0;
+  double _destLatitude = 0.0, _destLongitude = 0.0;
   @override
   void initState() {
     print("init state call");
+    // getlatLonFrom();
+    // getlatLonTo();
     //getCurrentLocation();
     getStringValuesSF();
     FirebaseMessaging.onMessage.listen(
@@ -101,6 +96,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     super.initState();
   }
 
+  String totalPrice = "0";
   String from = "";
   String destination = "";
   void getdailyrideData(String? rideId) {
@@ -118,6 +114,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
       setState(() {
         from = fields!['from'];
         destination = fields['destination'];
+        totalPrice = fields['totalPrice'].toString();
+        getlatLonFrom(sourceLoc: fields['from']);
+        getlatLonTo(destinationLoc: fields['destination']);
       });
       showDialog(
         context: context,
@@ -182,10 +181,26 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 child: CustomeButton(
                   text: "ACCEPT",
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DriverMapPage()),
-                    );
+                    if (_originLatitude == 0.0 && _destLongitude == 0.0) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Somethin Wrong"),
+                        duration: Duration(seconds: 2),
+                      ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DriverMapPage(
+                                  originLatitude: _originLatitude,
+                                  originLongitude: _originLongitude,
+                                  destLatitude: _destLatitude,
+                                  destLongitude: _destLongitude,
+                                  source: from,
+                                  destination: destination,
+                                  totalPrice: totalPrice,
+                                )),
+                      );
+                    }
                   },
                   color: Colors.blue,
                 ),
@@ -208,17 +223,42 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     });
   }
 
-  getlatLon() async {
-    print("geolatlon called");
+  getlatLonFrom({String? sourceLoc}) async {
+    print("geolatlon called From");
     try {
-      List<Location> locations = await locationFromAddress(
-          "Karachi Cantt Railway Station, Doctor Daud Pota Road, Karachi Cantonment Karachi, Pakistan");
-      print("Latitude: ${locations[0].latitude}");
-      print("Longitude: ${locations[0].longitude}");
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-          locations[0].latitude, locations[0].longitude);
+      List<Location> locations = await locationFromAddress(sourceLoc ?? "");
+      // print("Latitude from: ${locations[0].latitude}");
+      // print("Longitude from: ${locations[0].longitude}");
+      setState(() {
+        _originLatitude = locations[0].latitude;
+        _originLongitude = locations[0].longitude;
+      });
+
+      // List<Placemark> placemarks = await placemarkFromCoordinates(
+      //     locations[0].latitude, locations[0].longitude);
       // Address address = await geoCode.reverseGeocoding(latitude: 33.691993, longitude: 73.0480956);
-      print(placemarks);
+      // print(placemarks);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getlatLonTo({String? destinationLoc}) async {
+    print("geolatlon called To");
+    try {
+      List<Location> locations =
+          await locationFromAddress(destinationLoc ?? "");
+      print("Latitude to: ${locations[0].latitude}");
+      print("Longitude to: ${locations[0].longitude}");
+      setState(() {
+        _destLatitude = locations[0].latitude;
+        _destLongitude = locations[0].longitude;
+      });
+
+      // List<Placemark> placemarks = await placemarkFromCoordinates(
+      //     locations[0].latitude, locations[0].longitude);
+      // Address address = await geoCode.reverseGeocoding(latitude: 33.691993, longitude: 73.0480956);
+      // print(placemarks);
     } catch (e) {
       print(e);
     }
@@ -482,10 +522,27 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => DriverMapPage()),
-                    );
+                    if (_originLatitude == 0.0 && _destLongitude == 0.0) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Something Wrong"),
+                        duration: Duration(seconds: 2),
+                      ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DriverMapPage(
+                            originLatitude: _originLatitude,
+                            originLongitude: _originLongitude,
+                            destLatitude: _destLatitude,
+                            destLongitude: _destLongitude,
+                            source: from,
+                            destination: destination,
+                            totalPrice: totalPrice,
+                          ),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     primary: Colors.grey[800],

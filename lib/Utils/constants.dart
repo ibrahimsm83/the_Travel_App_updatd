@@ -14,6 +14,7 @@ Color interchatbg_color = Color(0xfffcdbd0);
 //Colors.grey[400]
 
 const String imgpath = 'assets/images';
+const GoogleMapApiKey = "AIzaSyBW5iOvTYmTq9B77_bB_lHL1xsA1qT5u2Y";
 //height
 sizeheight(BuildContext context) {
   return MediaQuery.of(context).size.height;

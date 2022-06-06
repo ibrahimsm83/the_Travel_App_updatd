@@ -224,6 +224,7 @@ class _PolyLinePointPageState extends State<PolyLinePointPage> {
                           onMapCreated: onMapCreated, //_onMapCreated,
                           markers: _markers, //Set<Marker>.of(markers.values),
                           polylines: Set<Polyline>.of(polylines.values),
+                          
                         ),
                       ),
                     ],

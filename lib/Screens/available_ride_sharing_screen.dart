@@ -40,9 +40,18 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Available Rides"),
-        backgroundColor: primaryColor,
+      appBar: new AppBar(
+        iconTheme: IconThemeData(color: Colors.white),
+        backgroundColor: Colors.grey[800],
+        title: new Text(
+          "Available Rides",
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Montserrat',
+          ),
+        ),
+        toolbarHeight: 70.0,
+        elevation: 5.0,
       ),
       body: new Container(
         child: new Column(
@@ -88,12 +97,12 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  Icon(Icons.car_rental, color: primaryColor, size: 30),
+                  Icon(Icons.car_rental, color: Colors.grey[800], size: 30),
                   SizedBox(width: 5.0),
                   Text(
                     "AVAILABLE RIDES",
                     style: new TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 10.sp),
+                        fontWeight: FontWeight.bold, fontSize: 10.sp,fontFamily: 'Montserrat',),
                   ),
                 ],
               ),
@@ -118,7 +127,7 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
                                 padding: const EdgeInsets.all(10.0),
                                 child: Text(
                                   listData.toString(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: TextStyle(fontWeight: FontWeight.bold,fontFamily: 'Montserrat',),
                                 ),
                               ));
                         },
@@ -144,7 +153,7 @@ class _AvailableRidePageState extends State<AvailableRidePage> {
                               padding: const EdgeInsets.all(10.0),
                               child: new Text(listData.toString(),
                                   style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
+                                      TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Montserrat',)),
                             ),
                           );
                         },

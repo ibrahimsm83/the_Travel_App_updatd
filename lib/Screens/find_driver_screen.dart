@@ -3,12 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sizer/sizer.dart';
 import 'package:travelapp/Screens/poly_line_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
@@ -142,16 +144,16 @@ class CustomemapPageState extends State<CustomemapPage> {
                             snapshot.data!.docs[i]['longitude']),
                         onTap: () {
                           _settingModalBottomSheet(
-                              context,
-                              snapshot.data!.docs[i]['phoneno'],
-                              snapshot.data!.docs[i]['address'],
-                              snapshot.data!.docs[i]['name'],
-                              clatitude,
-                              clongitude,
-                              snapshot.data!.docs[i]['Email'],
-                              snapshot.data!.docs[i]['services'],
-                              //snapshot.data!.docs[i]['token']
-                              );
+                            context,
+                            snapshot.data!.docs[i]['phoneno'],
+                            snapshot.data!.docs[i]['address'],
+                            snapshot.data!.docs[i]['name'],
+                            clatitude,
+                            clongitude,
+                            snapshot.data!.docs[i]['Email'],
+                            snapshot.data!.docs[i]['services'],
+                            //snapshot.data!.docs[i]['token']
+                          );
                         },
                         icon: sourceIcon));
                   }
@@ -250,16 +252,16 @@ class CustomemapPageState extends State<CustomemapPage> {
                       snapshot.data!.docs[i]['longitude']),
                   onTap: () {
                     _settingModalBottomSheet(
-                        context,
-                        snapshot.data!.docs[i]['phoneno'],
-                        snapshot.data!.docs[i]['address'],
-                        snapshot.data!.docs[i]['name'],
-                        clatitude,
-                        clongitude,
-                        snapshot.data!.docs[i]['Email'],
-                        snapshot.data!.docs[i]['services'],
-                       // snapshot.data!.docs[i]['token']
-                        );
+                      context,
+                      snapshot.data!.docs[i]['phoneno'],
+                      snapshot.data!.docs[i]['address'],
+                      snapshot.data!.docs[i]['name'],
+                      clatitude,
+                      clongitude,
+                      snapshot.data!.docs[i]['Email'],
+                      snapshot.data!.docs[i]['services'],
+                      // snapshot.data!.docs[i]['token']
+                    );
                     // print("${snapshot.data.docs[i]['address']}");
                     // print("${snapshot.data.docs[i]['phoneno']}");
                   },
@@ -714,9 +716,41 @@ class CustomemapPageState extends State<CustomemapPage> {
                       fontFamily: 'Montserrat',
                     ),
                   ),
-                  //Text("Address"),
                 ),
+//rating
 
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Rating",
+                        style: TextStyle(
+                            fontFamily: 'Montserrat', fontSize: 14.sp),
+                      ),
+                      SizedBox(width: 10.0),
+                      RatingBar.builder(
+                        initialRating: 3.5,
+                        minRating: 3.5,
+                        direction: Axis.horizontal,
+                        allowHalfRating: false,
+                        ignoreGestures: true,
+                        itemCount: 5,
+                        //tapOnlyMode: true,
+                        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                          size: 18,
+                        ),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 2.0),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -736,7 +770,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                           // token: token,
+                                            // token: token,
                                           )));
 
                               //send cu
@@ -780,7 +814,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                             dname: name,
                                             dphone: phoneno,
                                             dservices: services,
-                                           // token: token,
+                                            // token: token,
                                           )));
                             },
                             child: Container(

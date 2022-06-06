@@ -28,7 +28,7 @@ class _PickupListPgState extends State<PickupListPg> {
             style: TextStyle(
               fontFamily: 'Montserrat',
             )),
-        backgroundColor: primaryColor,
+        backgroundColor: Colors.grey[800],
         toolbarHeight: 70.0,
       ),
       body: ListView.builder(
