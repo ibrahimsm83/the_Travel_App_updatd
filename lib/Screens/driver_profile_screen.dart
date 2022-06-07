@@ -43,8 +43,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
           print(message.notification!.title);
           // print(message.notification!.body);
           // print("message  ${message}");
-          print("message.data11 ${message.data}");
-          getdailyrideData(message.notification!.body);
+          // print("message.data11555555555555555555555 ${message.data}");
+          // print(
+          //     "message.data11555555555555555555555 ${message.data['command']}");
+
+          getdailyrideData(message.data['command']);
         }
       },
     );

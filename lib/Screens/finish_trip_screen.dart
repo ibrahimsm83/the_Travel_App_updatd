@@ -17,11 +17,11 @@ class FinishTripPage extends StatelessWidget {
     return Scaffold(
       appBar: new AppBar(
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back_ios),
-          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
         backgroundColor: Colors.grey[800],
         title: new Text(
           "Finish Trip ",
@@ -46,7 +46,11 @@ class FinishTripPage extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 "Payment",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp,fontFamily: 'Montserrat',),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.sp,
+                  fontFamily: 'Montserrat',
+                ),
               ),
             ),
             cardBox(context),
@@ -63,7 +67,6 @@ class FinishTripPage extends StatelessWidget {
                 color: Colors.grey[800],
                 fontWeight: FontWeight.bold,
                 text: "Collect Cash",
-
               ),
             ),
           ],
@@ -116,7 +119,7 @@ class FinishTripPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        height: 100,
+        //height: 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: Colors.grey[800],
@@ -196,7 +199,9 @@ class FinishTripPage extends StatelessWidget {
                   fontFamily: 'Montserrat',
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               CustomeTextFormField(
                 hintText: "012 345 8988 2543",
               )

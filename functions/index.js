@@ -21,14 +21,19 @@ exports.notifyNewMessage = functions.firestore.document("/DailyRides/{dailyridei
  const querySnapshot=db.collection('Drivers').doc(message.driverid).collection('tokens').get();
  const token=(await querySnapshot).docs.map((snap)=>snap.id);
   // console.log(token);
+  // console.log("message.userid");
+  // console.log(message.userid);
    // Notification details.
    const payload = {
     notification: {
         title: "The Travel App",
-        body:message.userid,
+        body:message.destination,
         click_action: 'FLUTTER_NOTIFICATION_CLICK',
         priority: "high",
         sound: 'default',
+    },
+    data: {
+      command:message.userid,
     },
   };
   // try{
