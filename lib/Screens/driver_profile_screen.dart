@@ -17,7 +17,8 @@ import 'package:travelapp/services/local_push_notification.dart';
 import 'package:travelapp/widgets/custome_button.dart';
 
 class DriverProfileScreen extends StatefulWidget {
-  const DriverProfileScreen({Key? key}) : super(key: key);
+  String? userid;
+  DriverProfileScreen({Key? key, this.userid}) : super(key: key);
 
   @override
   _DriverProfileScreenState createState() => _DriverProfileScreenState();
@@ -28,10 +29,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   double _destLatitude = 0.0, _destLongitude = 0.0;
   @override
   void initState() {
-    print("init state call");
-    // getlatLonFrom();
-    // getlatLonTo();
-    //getCurrentLocation();
+    print("init state call ${widget.userid}");
+    widget.userid != null ? getdailyrideData(widget.userid) : null;
     getStringValuesSF();
     FirebaseMessaging.onMessage.listen(
       (message) {
@@ -41,12 +40,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
         if (notification != null && android != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print(message.notification!.title);
-          // print(message.notification!.body);
-          // print("message  ${message}");
-          // print("message.data11555555555555555555555 ${message.data}");
-          // print(
-          //     "message.data11555555555555555555555 ${message.data['command']}");
-
           getdailyrideData(message.data['command']);
         }
       },
@@ -288,7 +281,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // getlatLon();
     bool _checkbox = false;
 
     final double btnmargsize = MediaQuery.of(context).size.width * 0.09;

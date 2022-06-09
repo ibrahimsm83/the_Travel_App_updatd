@@ -47,11 +47,12 @@ static void createanddisplaynotification(RemoteMessage message) async {
       );
 
       await _notificationsPlugin.show(
+       
         id,
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-        payload: message.data['_id'],
+        payload: message.data['command'],
       );
     } on Exception catch (e) {
       print(e);
