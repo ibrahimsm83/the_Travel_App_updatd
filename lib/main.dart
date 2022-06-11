@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:travelapp/Screens/driver_profile_screen.dart';
 import 'package:travelapp/Screens/splash_screen.dart';
 import 'package:travelapp/widgets/custome_snackbar.dart';
 import 'blocs/application_bloc.dart';
@@ -147,118 +148,66 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-// 1. This method call when app in terminated state and you get a notification
-    // when you click on notification app open from terminated state and you can get notification data in this method
-    print("push notification");
+    setupInteractedMessage();
+  }
 
+  Future<void> setupInteractedMessage() async {
+// 1. This method call when app in terminated state and you get a notification
+    // when you click on notification app open from terminated state and you can
+    // get notification data in this method
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
         print(
             "FirebaseMessaging.instance.getInitialMessage-------------------");
-
         if (message != null) {
-          print("New Notification ibrahim");
           LocalNotificationService.createanddisplaynotification(message);
-          // if (message.data['_id'] != null) {
-          //   Navigator.of(context).push(
-          //     MaterialPageRoute(
-          //       builder: (context) => DemoScreen(
-          //         id: message.data['_id'],
-          //       ),
-          //     ),
-          //   );
-          // }
+          print("terminate state 1");
+          _handleMessage(message);
         }
       },
     );
-    //App Push Notification
-    /*
-    FirebaseMessaging.onMessage.listen(
-      (message) {
-        RemoteNotification? notification = message.notification;
-        AndroidNotification? android = message.notification?.android;
-        print("FirebaseMessaging.onMessage.listen 44444444444");
-        if (notification != null && android != null) {
-          LocalNotificationService.createanddisplaynotification(message);
-          print(message.notification!.title);
-          print(message.notification!.body);
-          print("message  ${message}");
-          print("message.data11 ${message.data}");
-          // showDialog(
-          //   context: context,
-          //   builder: (context) => AlertDialog(
-          //     content: ListTile(
-          //       title: Text(message.notification!.title.toString()),
-          //       subtitle: Text(message.notification!.body.toString()),
-          //     ),
-          //     actions: <Widget>[
-          //       FlatButton(
-          //         color: Colors.amber,
-          //         child: Text('Ok'),
-          //         onPressed: () => Navigator.of(context).pop(),
-          //       ),
-          //     ],
-          //   ),
-          // );
-        }
-      },
-    );
-    */
+
     //background state
     //if you are sending a notification message, and you clicked the notification then the onMessageOpenedApp will be called.
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       final routeFromMessage = message.data;
-      print('A new onMessageOpenedApp event was published!');
+      print('A new onMessageOpenedApp event was published-----------!');
       LocalNotificationService.createanddisplaynotification(message);
-      print(routeFromMessage);
-      print('Message clicked!');
+/*
+So if you don’t have a BuildContext at that point, 
+you can register a GlobalKey as the navigatorKey property of your MaterialApp,
+ and use it to access your Navigator globally, via GlobalKey.currentState.
+*/
+      _handleMessage(message);
+      // navigatorKey.currentState!.push(MaterialPageRoute(
+      //     builder: (_) =>
+      //         DriverProfileScreen(userid: message.data['command']))
+      //         );
     });
   }
 
+  final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey(debugLabel: "Main Navigator");
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ApplicationBloc(),
-        child: Sizer(
-          builder: (context, orientation, deviceType) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              home: SplashScreen(),
-            );
-          },
-        ));
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          navigatorKey: navigatorKey,
+          debugShowCheckedModeBanner: false,
+          home: SplashScreen(),
+        );
+      },
+    );
   }
 
-  /// Get the token, save it to the database for current user
-  // _saveDeviceToken() async {
-  //   // Get the current user
-  //   String uid = 'jeffd23';
-  //   // FirebaseUser user = await _auth.currentUser();
-
-  //   // Get the token for this device
-  //   String fcmToken = await _fcm.getToken();
-
-  //   // Save it to Firestore
-  //   if (fcmToken != null) {
-  //     var tokens = _db
-  //         .collection('users')
-  //         .document(uid)
-  //         .collection('tokens')
-  //         .document(fcmToken);
-
-  //     await tokens.setData({
-  //       'token': fcmToken,
-  //       'createdAt': FieldValue.serverTimestamp(), // optional
-  //       'platform': Platform.operatingSystem // optional
-  //     });
-  //   }
-  // }
-
-  /// Subscribe the user to a topic
-  // _subscribeToTopic() async {
-  //   // Subscribe the user to a topic
-  //   _fcm.subscribeToTopic('puppies');
-  // }
+  void _handleMessage(RemoteMessage message) {
+    if (message.data['command'] != null) {
+      navigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) =>
+              DriverProfileScreen(userid: message.data['command'])));
+    }
+    print("terminate state end");
+  }
 }

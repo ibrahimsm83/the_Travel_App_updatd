@@ -39,7 +39,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
   late BitmapDescriptor sourceIcon;
   late BitmapDescriptor destinationIcon;
   bool btntext = true;
-  int secondsRemaining = 29;
+  int secondsRemaining = 59;
   bool enableResend = false;
   Timer? timer;
   void setMapPins() {
@@ -110,7 +110,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
     // );
 
     setState(() {
-      secondsRemaining = 29;
+      secondsRemaining = 59;
       enableResend = false;
     });
   }
@@ -142,7 +142,7 @@ class _DriverMapPageState extends State<DriverMapPage> {
           child: GoogleMap(
             initialCameraPosition: CameraPosition(
               target: LatLng(24.8607, 67.0011),
-              zoom: 12,
+              zoom: 10,
             ),
             onMapCreated: onMapCreated,
             markers: _markers,
