@@ -95,6 +95,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
   String totalPrice = "0";
   String from = "";
   String destination = "";
+  late bool? isRidecancel;
+  String uId = "";
   void getdailyrideData(String? rideId) {
     FirebaseFirestore.instance
         .collection('DailyRides')
@@ -110,6 +112,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
       setState(() {
         from = fields!['from'];
         destination = fields['destination'];
+        isRidecancel = fields['flag'];
+        uId = fields['userid'];
         totalPrice = fields['totalPrice'].toString();
         getlatLonFrom(sourceLoc: fields['from']);
         getlatLonTo(destinationLoc: fields['destination']);
@@ -207,7 +211,21 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 child: CustomeButton(
                   text: "CANCEL",
                   onTap: () {
-                    Navigator.of(context).pop();
+                    if (isRidecancel == true) {
+                      FirebaseFirestore.instance
+                          .collection('DailyRides')
+                          .doc(uId)
+                          .update({'flag': false});
+                      Future.delayed(Duration(seconds: 1), () {
+                        FirebaseFirestore.instance
+                            .collection('DailyRides')
+                            .doc(uId)
+                            .delete();
+                      });
+                      Navigator.of(context).pop();
+                    } else {
+                      print("Already ride cancelled ");
+                    }
                   },
                   color: Colors.red,
                 ),
@@ -323,7 +341,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Text(
-                                    "User",
+                                    "Driver",
                                     style: TextStyle(
                                         fontFamily: 'Montserrat',
                                         color: Colors.white,
@@ -548,23 +566,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                     ),
                   ),
                 )),
-            // Container(
-            //   width: sizeWidth(context),
-            //   margin: EdgeInsets.only(left: btnmargsize,right:btnmargsize ),
-            //   color: Colors.red,
-            //   child: ElevatedButton(
-            //       onPressed: (){
-            //         print("access --------------------------loc");
-            //         print(longitude);
-            //         print(latitude);
-            //         // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => GoogleMapPg(longitude,latitude)));
-            //
-            //         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CustomemapPage()));
-            //
-            //       },
-            //       child: Text("Find Mechanic",style: TextStyle(fontSize: 18),
-            //       ) ),
-            // ),
+
             SizedBox(
               height: 50,
             ),
@@ -573,24 +575,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
               thickness: 1,
               color: Colors.black,
             ),
-            //   Container(
-            //     height: 400,
-            //     color: Colors.blue,
-            //     child: Align(
-            //         alignment: Alignment.bottomCenter,
-            //         child: Text("Map",style: TextStyle(fontSize: 32),)),
-            //   )
-            // new Center(
-            //     child:new
-            //     Text('Yahn per mechanic ko dekhne k lye geo locator chahye',style: TextStyle(
-            //
-            //
-            //       fontSize: 50.0,
-            //       color: Colors.green
-            //     ),),
-            //
-            //
-            // ),
           ],
         ),
       ),

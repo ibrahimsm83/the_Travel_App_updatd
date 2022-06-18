@@ -163,7 +163,11 @@ class _MyAppState extends State<MyApp> {
         if (message != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print("terminate state 1");
-          _handleMessage(message);
+          if (message.data != null) {
+            _handleMessage(message);
+          } else {
+            _handleMessage1(message);
+          }
         }
       },
     );
@@ -179,11 +183,11 @@ So if you don’t have a BuildContext at that point,
 you can register a GlobalKey as the navigatorKey property of your MaterialApp,
  and use it to access your Navigator globally, via GlobalKey.currentState.
 */
-      _handleMessage(message);
-      // navigatorKey.currentState!.push(MaterialPageRoute(
-      //     builder: (_) =>
-      //         DriverProfileScreen(userid: message.data['command']))
-      //         );
+      if (message.data != null) {
+        _handleMessage(message);
+      } else {
+        _handleMessage1(message);
+      }
     });
   }
 
@@ -208,6 +212,13 @@ you can register a GlobalKey as the navigatorKey property of your MaterialApp,
           builder: (_) =>
               DriverProfileScreen(userid: message.data['command'])));
     }
+    print("terminate state end");
+  }
+
+  void _handleMessage1(RemoteMessage message) {
+    navigatorKey.currentState!
+        .push(MaterialPageRoute(builder: (_) => BottomNav()));
+
     print("terminate state end");
   }
 }

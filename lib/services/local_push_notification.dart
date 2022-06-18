@@ -34,7 +34,8 @@ class LocalNotificationService {
       },
     );
   }
-static void createanddisplaynotification(RemoteMessage message) async {
+
+  static void createanddisplaynotification(RemoteMessage message) async {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const NotificationDetails notificationDetails = NotificationDetails(
@@ -47,12 +48,11 @@ static void createanddisplaynotification(RemoteMessage message) async {
       );
 
       await _notificationsPlugin.show(
-       
         id,
         message.notification!.title,
         message.notification!.body,
         notificationDetails,
-        payload: message.data['command'],
+        //payload: message.data['command'],
       );
     } on Exception catch (e) {
       print(e);

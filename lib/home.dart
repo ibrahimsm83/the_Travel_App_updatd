@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:travelapp/Screens/available_ride_sharing_screen.dart';
 import 'package:travelapp/Screens/event_seat_screen.dart';
-import 'package:travelapp/Sharing/findsharedrides.dart';
+import 'package:travelapp/Screens/find_driver_intercity_screen.dart';
+import 'package:travelapp/services/local_push_notification.dart';
 import 'Screens/find_driver_screen.dart';
-import 'Sharing/polylinescreen.dart';
+
 import 'Utils/constants.dart';
 import 'reserveseat.dart';
 
@@ -18,6 +20,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isLoading = false;
+  @override
+  void initState() {
+    FirebaseMessaging.onMessage.listen(
+      (message) {
+        RemoteNotification? notification = message.notification;
+        AndroidNotification? android = message.notification?.android;
+        print("FirebaseMessaging.onMessage.listen 44444444444");
+        if (notification != null && android != null) {
+          LocalNotificationService.createanddisplaynotification(message);
+          print(message.notification!.title);
+        }
+      },
+    );
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -239,11 +258,12 @@ class _HomePageState extends State<HomePage> {
                                           child: InkWell(
                                             onTap: () {
                                               print("event tabed");
+                                              //FindDriverInterCityPage
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ReserveSeatPage(),
+                                                      FindDriverInterCityPage(),
                                                 ),
                                               );
                                             },

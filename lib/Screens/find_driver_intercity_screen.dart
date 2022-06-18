@@ -13,16 +13,17 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
 import 'package:travelapp/Screens/poly_line_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
+import 'package:travelapp/reserveseat.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-//Daily Rides
-class CustomemapPage extends StatefulWidget {
+//InterCity Rides
+class FindDriverInterCityPage extends StatefulWidget {
   @override
-  CustomemapPageState createState() => CustomemapPageState();
+  FindDriverInterCityPageState createState() => FindDriverInterCityPageState();
 }
 
-class CustomemapPageState extends State<CustomemapPage> {
+class FindDriverInterCityPageState extends State<FindDriverInterCityPage> {
   TextEditingController _inpurangeController = TextEditingController();
   //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var filterdistance;
@@ -115,9 +116,6 @@ class CustomemapPageState extends State<CustomemapPage> {
             return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (ctx, i) {
-                  print(snapshot.data!.docs[i]['latitude']);
-                  print(snapshot.data!.docs[i]['longitude']);
-
                   double distanceInMeters = Geolocator.distanceBetween(
                       // double.parse(clatitude),
                       // double.parse(clongitude),
@@ -125,37 +123,38 @@ class CustomemapPageState extends State<CustomemapPage> {
                       clongitude,
                       snapshot.data!.docs[i]['latitude'],
                       snapshot.data!.docs[i]['longitude']);
-                  if (distanceInMeters / 1000 < double.parse(dist)) {
-                    print("-----------if distanceInMeters-------");
-                    // print(distanceInMeters);
-                    // print("-------distanceInMeters/1000 ------------");
-                    // print(distanceInMeters / 1000);
-                    //print(double.parse(dist));
-                    //filtermarker(distanceInMeters/1000);
-                    //print(distanceInMeters);
-                    //allMarkers.clear();
-
-                    allMarkers.add(Marker(
-                        markerId: MarkerId(snapshot.data!.docs[i]['name']),
-                        draggable: false,
-                        infoWindow: InfoWindow(
-                            title: snapshot.data!.docs[i]['address']),
-                        position: LatLng(snapshot.data!.docs[i]['latitude'],
-                            snapshot.data!.docs[i]['longitude']),
-                        onTap: () {
-                          _settingModalBottomSheet(
-                            context,
-                            snapshot.data!.docs[i]['phoneno'],
-                            snapshot.data!.docs[i]['address'],
-                            snapshot.data!.docs[i]['name'],
-                            clatitude,
-                            clongitude,
-                            snapshot.data!.docs[i]['Email'],
-                            snapshot.data!.docs[i]['services'],
-                            //snapshot.data!.docs[i]['token']
-                          );
-                        },
-                        icon: sourceIcon));
+                  if (snapshot.data!.docs[i]['servicetype'] == "Intercity") {
+                    if (distanceInMeters / 1000 < double.parse(dist)) {
+                      print("-----------if distanceInMeters-------");
+                      // print(distanceInMeters);
+                      // print("-------distanceInMeters/1000 ------------");
+                      // print(distanceInMeters / 1000);
+                      //print(double.parse(dist));
+                      //filtermarker(distanceInMeters/1000);
+                      //print(distanceInMeters);
+                      //allMarkers.clear();
+                      allMarkers.add(Marker(
+                          markerId: MarkerId(snapshot.data!.docs[i]['name']),
+                          draggable: false,
+                          infoWindow: InfoWindow(
+                              title: snapshot.data!.docs[i]['address']),
+                          position: LatLng(snapshot.data!.docs[i]['latitude'],
+                              snapshot.data!.docs[i]['longitude']),
+                          onTap: () {
+                            _settingModalBottomSheet(
+                              context,
+                              snapshot.data!.docs[i]['phoneno'],
+                              snapshot.data!.docs[i]['address'],
+                              snapshot.data!.docs[i]['name'],
+                              clatitude,
+                              clongitude,
+                              snapshot.data!.docs[i]['Email'],
+                              snapshot.data!.docs[i]['services'],
+                              //snapshot.data!.docs[i]['token']
+                            );
+                          },
+                          icon: sourceIcon));
+                    }
                   }
                   return snapshot.data!.docs.length - 1 == i
                       ? Column(
@@ -282,12 +281,10 @@ class CustomemapPageState extends State<CustomemapPage> {
           ),
           backgroundColor: Colors.grey[800],
           toolbarHeight: 70.0,
-         
         ),
         body: Stack(
           children: [
             loadMarkerwithRange(filterdistance.toString()),
-
           ],
         ),
       ),
@@ -395,7 +392,6 @@ class CustomemapPageState extends State<CustomemapPage> {
                   SizedBox(
                     height: 30.0,
                   ),
-                 
                   Container(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -492,7 +488,6 @@ class CustomemapPageState extends State<CustomemapPage> {
           ),
         )),
         SizedBox(height: 5.0),
-       
       ],
     );
   }
@@ -685,13 +680,15 @@ class CustomemapPageState extends State<CustomemapPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PolyLinePointPage(
-                                            dname: name,
-                                            dphone: phoneno,
-                                            dservices: services,
-                                            // token: token,
-                                          )));
+                                    builder: (BuildContext context) =>
+                                        ReserveSeatPage(),
+                                    // PolyLinePointPage(
+                                    //   dname: name,
+                                    //   dphone: phoneno,
+                                    //   dservices: services,
+                                    //   // token: token,
+                                    // )
+                                  ));
 
                               //send cu
                               // await Database.addusercrrentloc(
@@ -730,12 +727,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (BuildContext context) =>
-                                          PolyLinePointPage(
-                                            dname: name,
-                                            dphone: phoneno,
-                                            dservices: services,
-                                            // token: token,
-                                          )));
+                                          ReserveSeatPage()));
                             },
                             child: Container(
                                 child: Text(
