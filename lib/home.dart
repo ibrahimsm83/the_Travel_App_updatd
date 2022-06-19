@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:travelapp/Screens/available_ride_sharing_screen.dart';
 import 'package:travelapp/Screens/event_seat_screen.dart';
+import 'package:travelapp/Screens/find_driver_event_screen.dart';
 import 'package:travelapp/Screens/find_driver_intercity_screen.dart';
 import 'package:travelapp/services/local_push_notification.dart';
 import 'Screens/find_driver_screen.dart';
@@ -337,7 +338,8 @@ class _HomePageState extends State<HomePage> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      EventsReserveSeats(),
+                                                    FindDriverEventPage(),
+                                                      //EventsReserveSeatsPage(),
                                                 ),
                                               );
                                             },

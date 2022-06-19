@@ -211,8 +211,21 @@ you can register a GlobalKey as the navigatorKey property of your MaterialApp,
       navigatorKey.currentState!.push(MaterialPageRoute(
           builder: (_) =>
               DriverProfileScreen(userid: message.data['command'])));
+    } else if (message.data['command1'] != null) {
+      navigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) => DriverProfileScreen(
+                userid: message.data['command1'],
+                isIntercityride: true,
+                icityid: message.data['icityid'],
+              )));
+    }else if(message.data['commandevent'] != null){
+  navigatorKey.currentState!.push(MaterialPageRoute(
+          builder: (_) => DriverProfileScreen(
+                userid: message.data['commandevent'],
+                isEventRide: true,
+                icityid: message.data['eventid'],
+              )));
     }
-    print("terminate state end");
   }
 
   void _handleMessage1(RemoteMessage message) {

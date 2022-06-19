@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'package:date_format/date_format.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_api_headers/google_api_headers.dart';
+
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
+
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:math' show cos, sqrt, asin;
@@ -26,8 +25,11 @@ class DrawPolyLine extends StatefulWidget {
   String vehicleType;
   String? comment;
   String? pickuptime;
+  String? driverid;
+  bool isEventPage;
   DrawPolyLine({
     Key? key,
+    this.isEventPage = false,
     this.originLatitude = 0.0,
     this.originLongitude = 0.0,
     this.destLatitude = 0.0,
@@ -38,7 +40,8 @@ class DrawPolyLine extends StatefulWidget {
     this.pickupDateTime,
     this.vehicleType = "",
     this.comment,
-    this.pickuptime
+    this.pickuptime,
+    this.driverid,
   }) : super(key: key);
 
   @override
@@ -190,21 +193,38 @@ class _DrawPolyLineState extends State<DrawPolyLine> {
                                       //Return String
                                       var userEmail =
                                           prefs.getString('useremail');
-
+                                      if (widget.isEventPage) {
+                                        await Database.addEventCityReserveSeat(
+                                          email: userEmail,
+                                          bookingDateTime: now,
+                                          totalDistance: widget.totlaDistance,
+                                          totalPrice: widget.totlaDistance * 30,
+                                          pickUpLocation: widget.pickupLocation,
+                                          dropOffLoacation:
+                                              widget.dropOffLocation,
+                                          pickupDateTime: widget.pickupDateTime,
+                                          vehicleType: widget.vehicleType,
+                                          comment: widget.comment,
+                                          pickuptime: widget.pickuptime,
+                                          driverId: widget.driverid,
+                                        );
+                                      } else {
+                                        await Database.addInterCityReserveSeat(
+                                          email: userEmail,
+                                          bookingDateTime: now,
+                                          totalDistance: widget.totlaDistance,
+                                          totalPrice: widget.totlaDistance * 30,
+                                          pickUpLocation: widget.pickupLocation,
+                                          dropOffLoacation:
+                                              widget.dropOffLocation,
+                                          pickupDateTime: widget.pickupDateTime,
+                                          vehicleType: widget.vehicleType,
+                                          comment: widget.comment,
+                                          pickuptime: widget.pickuptime,
+                                          driverId: widget.driverid,
+                                        );
+                                      }
                                       // add data in db of dailyrides
-                                      await Database.addInterCityReserveSeat(
-                                        email: userEmail,
-                                        bookingDateTime: now,
-                                        totalDistance: widget.totlaDistance,
-                                        totalPrice: widget.totlaDistance * 30,
-                                        pickUpLocation: widget.pickupLocation,
-                                        dropOffLoacation:
-                                            widget.dropOffLocation,
-                                        pickupDateTime: widget.pickupDateTime,
-                                        vehicleType: widget.vehicleType,
-                                        comment: widget.comment,
-                                        pickuptime: widget.pickuptime
-                                      );
                                       _showNotification();
                                       Navigator.push(
                                         context,

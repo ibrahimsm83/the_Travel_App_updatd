@@ -1,30 +1,21 @@
 import 'dart:math';
-
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:google_maps_webservice/directions.dart';
 import 'package:google_maps_webservice/places.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:travelapp/bottomnav.dart';
-
-import 'package:travelapp/widgets/date_timePicker.dart';
 import 'package:travelapp/widgets/polyline_widget.dart';
-//import 'package:travelapp/home.dart';
-//import 'package:number_inc_dec/number_inc_dec.dart';
-//import 'chooselocation.dart';
-
 import 'package:intl/intl.dart';
 
-class EventsReserveSeats extends StatefulWidget {
-  const EventsReserveSeats({Key? key}) : super(key: key);
+class EventsReserveSeatsPage extends StatefulWidget {
+  String? dirverId;
+  EventsReserveSeatsPage({Key? key, this.dirverId}) : super(key: key);
 
   @override
-  _EventsReserveSeatsState createState() => _EventsReserveSeatsState();
+  _EventsReserveSeatsPageState createState() => _EventsReserveSeatsPageState();
 }
 
-class _EventsReserveSeatsState extends State<EventsReserveSeats> {
+class _EventsReserveSeatsPageState extends State<EventsReserveSeatsPage> {
   TextEditingController _pickupController = TextEditingController();
   TextEditingController _dropoffController = TextEditingController();
   TextEditingController _comments = TextEditingController();
@@ -57,10 +48,11 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
   String getText() {
     if (selectedTime == null) {
       return "Select Time";
-    }
-    else {
-      String selTime =
-      selectedTime.hour.toString().padLeft(2, '0') + ':' + selectedTime.minute.toString().padLeft(2, '0') + ':00';
+    } else {
+      String selTime = selectedTime.hour.toString().padLeft(2, '0') +
+          ':' +
+          selectedTime.minute.toString().padLeft(2, '0') +
+          ':00';
       time = DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime));
       return time;
     }
@@ -86,7 +78,7 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
   Future pickTime(BuildContext context) async {
     final initialTime = TimeOfDay(hour: 9, minute: 0);
     final newTime = await showTimePicker(
-      context: context, 
+      context: context,
       initialTime: selectedTime,
     );
     if (newTime == null) return;
@@ -168,24 +160,12 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                   labelText: 'Pickup Location',
                                   hoverColor: Colors.teal[200]),
                               validator: (value) {
-                                if (value!.isEmpty) 
-                                {
+                                if (value!.isEmpty) {
                                   return "Enter Pickup Location";
                                 } else {
                                   return null;
                                 }
                               },
-                              // showCursor: true,
-                              // readOnly: true,
-                              // onChanged: (value) {
-                              //   print(value);
-                              // },
-                              // onTap: () {
-                              //   Navigator.push(context, MaterialPageRoute(
-                              //                     builder: (context) => LocationScreen(),
-                              //                     ),
-                              //                   );
-                              // },
                             ),
                           ),
                         ),
@@ -205,23 +185,13 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                               decoration: InputDecoration(
                                   labelText: 'Drop Off Location',
                                   hoverColor: Colors.teal[200]),
-                                validator: (value) {
-                                if (value!.isEmpty) 
-                                {
+                              validator: (value) {
+                                if (value!.isEmpty) {
                                   return "Enter Pickup Location";
                                 } else {
                                   return null;
                                 }
                               },
-                              // showCursor: true,
-                              // readOnly: true,
-
-                              // onTap: () {
-                              //   Navigator.push(context, MaterialPageRoute(
-                              //                     builder: (context) => LocationScreen(),
-                              //                     ),
-                              //                   );
-                              // },
                             ),
                           ),
                         ),
@@ -232,11 +202,10 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                             'Select Date',
                             style: TextStyle(
                                 //fontStyle: FontStyle.italic,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                  fontFamily: 'Montserrat',
-                                  fontSize: 18.0
-                              ),
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                                fontFamily: 'Montserrat',
+                                fontSize: 18.0),
                           ),
                         ),
                         InkWell(
@@ -248,7 +217,8 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                             alignment: Alignment.center,
                             decoration: BoxDecoration(color: Colors.grey[200]),
                             child: TextFormField(
-                              style: TextStyle(fontSize: 20,fontFamily: 'Montserrat'),
+                              style: TextStyle(
+                                  fontSize: 20, fontFamily: 'Montserrat'),
                               textAlign: TextAlign.center,
                               enabled: false,
                               keyboardType: TextInputType.text,
@@ -291,18 +261,6 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                 fontFamily: 'Montserrat',
                               ),
                               textAlign: TextAlign.center,
-                              // enabled: false,
-                              // keyboardType: TextInputType.text,
-                              // controller: getText(),
-                              // onSaved: (String? val) {
-                              //   print(_setDate);
-                              //   _setDate = val!;
-                              // },
-                              // decoration: InputDecoration(
-                              //     disabledBorder: UnderlineInputBorder(
-                              //         borderSide: BorderSide.none),
-                              //     // labelText: 'Time',
-                              //     contentPadding: EdgeInsets.only(top: 0.0)),
                             ),
                           ),
                         ),
@@ -340,7 +298,9 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                     ),
                                     Text(
                                       '$vehicle1',
-                                      style: TextStyle(fontSize: 15.0,fontFamily: 'Montserrat'),
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontFamily: 'Montserrat'),
                                     ), //Checkbox
                                   ], //<Widget>[]
                                 ), //Padding
@@ -382,7 +342,9 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                     ),
                                     Text(
                                       '$vehicle2',
-                                      style: TextStyle(fontSize: 15.0,fontFamily: 'Montserrat'),
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontFamily: 'Montserrat'),
                                     ), //Checkbox
                                   ], //<Widget>[]
                                 ), //Padding
@@ -390,8 +352,6 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                             ),
                           ),
                         ),
-                        //
-                        //
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Align(
@@ -426,7 +386,9 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                     ),
                                     Text(
                                       '$vehicle3',
-                                      style: TextStyle(fontSize: 15.0,fontFamily: 'Montserrat'),
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          fontFamily: 'Montserrat'),
                                     ), //Checkbox
                                   ], //<Widget>[]
                                 ), //Padding
@@ -469,13 +431,11 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                 if ((checkbox1 || checkbox2 || checkbox3) &&
                                     (formKey.currentState!.validate())) {
                                   if (checkbox1) {
-                                    print(vehicle1);
                                     var totalDistance = calculateDistance(
                                         _originLatitude,
                                         _originLongitude,
                                         _destLatitude,
-                                        _destLongitude
-                                      );
+                                        _destLongitude);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -496,10 +456,11 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                                   pickupDateTime:
                                                       _dateController.text,
                                                   vehicleType: vehicle1,
-                                                  pickuptime: time
+                                                  pickuptime: time,
+                                                  driverid: widget.dirverId,
+                                                  isEventPage: true,
                                                 )));
                                   } else if (checkbox2) {
-                                    print(vehicle2);
                                     var totalDistance = calculateDistance(
                                         _originLatitude,
                                         _originLongitude,
@@ -525,6 +486,9 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                                   pickupDateTime:
                                                       _dateController.text,
                                                   vehicleType: vehicle2,
+                                                  pickuptime: time,
+                                                  driverid: widget.dirverId,
+                                                  isEventPage: true,
                                                 )));
                                   } else {
                                     print(vehicle3);
@@ -553,6 +517,9 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                                                   pickupDateTime:
                                                       _dateController.text,
                                                   vehicleType: vehicle3,
+                                                  pickuptime: time,
+                                                  driverid: widget.dirverId,
+                                                  isEventPage: true,
                                                 )));
                                   }
                                 } else {
@@ -606,7 +573,6 @@ class _EventsReserveSeatsState extends State<EventsReserveSeats> {
                             ),
                           ],
                         ),
-
                         SizedBox(height: 20.0),
                       ],
                     ),

@@ -126,13 +126,6 @@ class FindDriverInterCityPageState extends State<FindDriverInterCityPage> {
                   if (snapshot.data!.docs[i]['servicetype'] == "Intercity") {
                     if (distanceInMeters / 1000 < double.parse(dist)) {
                       print("-----------if distanceInMeters-------");
-                      // print(distanceInMeters);
-                      // print("-------distanceInMeters/1000 ------------");
-                      // print(distanceInMeters / 1000);
-                      //print(double.parse(dist));
-                      //filtermarker(distanceInMeters/1000);
-                      //print(distanceInMeters);
-                      //allMarkers.clear();
                       allMarkers.add(Marker(
                           markerId: MarkerId(snapshot.data!.docs[i]['name']),
                           draggable: false,
@@ -681,7 +674,9 @@ class FindDriverInterCityPageState extends State<FindDriverInterCityPage> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
-                                        ReserveSeatPage(),
+                                        ReserveSeatPage(
+                                      dirverId: phoneno,
+                                    ),
                                     // PolyLinePointPage(
                                     //   dname: name,
                                     //   dphone: phoneno,

@@ -1,19 +1,19 @@
 import 'dart:math';
-import 'package:date_format/date_format.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:google_maps_webservice/directions.dart';
+
 import 'package:google_maps_webservice/places.dart';
-import 'package:intl/date_symbol_data_local.dart';
+
 import 'package:travelapp/bottomnav.dart';
-import 'package:travelapp/widgets/date_timePicker.dart';
+
 import 'package:travelapp/widgets/polyline_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/intl.dart';
 
 class ReserveSeatPage extends StatefulWidget {
-  const ReserveSeatPage({Key? key}) : super(key: key);
+  String? dirverId;
+  ReserveSeatPage({Key? key, this.dirverId}) : super(key: key);
 
   @override
   _ReserveSeatPageState createState() => _ReserveSeatPageState();
@@ -58,10 +58,7 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
           ':00';
       time = DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime));
       return time; //DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime));
-      //print(DateFormat.jm().format(DateFormat("hh:mm:ss").parse(selTime)));
-      // final hours = selectedTime.hour.toString().padLeft(2, '0');
-      // final minutes = selectedTime.minute.toString().padLeft(2, '0');
-      // return '$hours:$minutes';
+
     }
   }
 
@@ -516,24 +513,24 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
                                         MaterialPageRoute(
                                             builder: (BuildContext context) =>
                                                 DrawPolyLine(
-                                                    originLatitude:
-                                                        _originLatitude,
-                                                    originLongitude:
-                                                        _originLongitude,
-                                                    destLatitude: _destLatitude,
-                                                    destLongitude:
-                                                        _destLongitude,
-                                                    totlaDistance:
-                                                        totalDistance,
-                                                    pickupLocation:
-                                                        _pickupController.text,
-                                                    dropOffLocation:
-                                                        _dropoffController.text,
-                                                    comment: _comments.text,
-                                                    pickupDateTime:
-                                                        _dateController.text,
-                                                    vehicleType: vehicle1,
-                                                    pickuptime: time)));
+                                                  originLatitude:
+                                                      _originLatitude,
+                                                  originLongitude:
+                                                      _originLongitude,
+                                                  destLatitude: _destLatitude,
+                                                  destLongitude: _destLongitude,
+                                                  totlaDistance: totalDistance,
+                                                  pickupLocation:
+                                                      _pickupController.text,
+                                                  dropOffLocation:
+                                                      _dropoffController.text,
+                                                  comment: _comments.text,
+                                                  pickupDateTime:
+                                                      _dateController.text,
+                                                  vehicleType: vehicle1,
+                                                  pickuptime: time,
+                                                  driverid: widget.dirverId,
+                                                )));
                                   } else if (checkbox2) {
                                     print(vehicle2);
                                     var totalDistance = calculateDistance(
@@ -542,28 +539,27 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
                                         _destLatitude,
                                         _destLongitude);
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (BuildContext context) =>
-                                                DrawPolyLine(
-                                                    originLatitude:
-                                                        _originLatitude,
-                                                    originLongitude:
-                                                        _originLongitude,
-                                                    destLatitude: _destLatitude,
-                                                    destLongitude:
-                                                        _destLongitude,
-                                                    totlaDistance:
-                                                        totalDistance,
-                                                    pickupLocation:
-                                                        _pickupController.text,
-                                                    dropOffLocation:
-                                                        _dropoffController.text,
-                                                    comment: _comments.text,
-                                                    pickupDateTime:
-                                                        _dateController.text,
-                                                    vehicleType: vehicle2,
-                                                    pickuptime: time)));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            DrawPolyLine(
+                                          originLatitude: _originLatitude,
+                                          originLongitude: _originLongitude,
+                                          destLatitude: _destLatitude,
+                                          destLongitude: _destLongitude,
+                                          totlaDistance: totalDistance,
+                                          pickupLocation:
+                                              _pickupController.text,
+                                          dropOffLocation:
+                                              _dropoffController.text,
+                                          comment: _comments.text,
+                                          pickupDateTime: _dateController.text,
+                                          vehicleType: vehicle2,
+                                          pickuptime: time,
+                                          driverid: widget.dirverId,
+                                        ),
+                                      ),
+                                    );
                                   } else {
                                     print(vehicle3);
                                     var totalDistance = calculateDistance(
@@ -591,6 +587,8 @@ class _ReserveSeatPageState extends State<ReserveSeatPage> {
                                                   pickupDateTime:
                                                       _dateController.text,
                                                   vehicleType: vehicle3,
+                                                  pickuptime: time,
+                                                  driverid: widget.dirverId,
                                                 )));
                                   }
                                 } else {

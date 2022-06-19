@@ -18,7 +18,16 @@ import 'package:travelapp/widgets/custome_button.dart';
 
 class DriverProfileScreen extends StatefulWidget {
   String? userid;
-  DriverProfileScreen({Key? key, this.userid}) : super(key: key);
+  bool isIntercityride;
+  bool isEventRide;
+  String? icityid;
+  DriverProfileScreen(
+      {Key? key,
+      this.userid,
+      this.isIntercityride = false,
+      this.isEventRide = false,
+      this.icityid})
+      : super(key: key);
 
   @override
   _DriverProfileScreenState createState() => _DriverProfileScreenState();
@@ -27,20 +36,40 @@ class DriverProfileScreen extends StatefulWidget {
 class _DriverProfileScreenState extends State<DriverProfileScreen> {
   double _originLatitude = 0.0, _originLongitude = 0.0;
   double _destLatitude = 0.0, _destLongitude = 0.0;
+  String totalPrice = "0";
+  String from = "";
+  String destination = "";
+  late bool? isRidecancel;
+  String uId = "";
+  var locationMessage = '';
+  String? latitude;
+  String? longitude;
+  String? eml;
+
   @override
   void initState() {
     print("init state call ${widget.userid}");
     widget.userid != null ? getdailyrideData(widget.userid) : null;
+    widget.isIntercityride
+        ? getInterCityRide(widget.userid, widget.icityid)
+        : null;
+    widget.isEventRide ? getEventRide(widget.userid, widget.icityid) : null;
     getStringValuesSF();
     FirebaseMessaging.onMessage.listen(
       (message) {
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
-        print("FirebaseMessaging.onMessage.listen 44444444444");
+
         if (notification != null && android != null) {
           LocalNotificationService.createanddisplaynotification(message);
           print(message.notification!.title);
-          getdailyrideData(message.data['command']);
+          if (message.data['command'] != null) {
+            getdailyrideData(message.data['command']);
+          } else if (message.data['command1'] != null) {
+            getInterCityRide(message.data['command1'], message.data['icityid']);
+          } else if (message.data['commandevent'] != null) {
+            getEventRide(message.data['commandevent'], message.data['eventid']);
+          }
         }
       },
     );
@@ -92,11 +121,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     super.initState();
   }
 
-  String totalPrice = "0";
-  String from = "";
-  String destination = "";
-  late bool? isRidecancel;
-  String uId = "";
   void getdailyrideData(String? rideId) {
     FirebaseFirestore.instance
         .collection('DailyRides')
@@ -237,51 +261,332 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     });
   }
 
+  void getInterCityRide(String? rideId, String? intercityid) {
+    FirebaseFirestore.instance
+        .collection('InterCity')
+        .doc(rideId)
+        .collection('InterCityDataUsers')
+        .doc(intercityid)
+        .get()
+        .then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      setState(() {
+        from = fields!['pickUpLocation'];
+        destination = fields['dropOffLoacation'];
+        isRidecancel = fields['flag'];
+        uId = fields['email'];
+        totalPrice = fields['totalPrice'].toString();
+        getlatLonFrom(sourceLoc: fields['pickUpLocation']);
+        getlatLonTo(destinationLoc: fields['dropOffLoacation']);
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "New Ride Request",
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Divider(thickness: 2.0),
+              SizedBox(height: 5.0),
+              Row(
+                children: [
+                  Icon(Icons.location_on),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields!['pickUpLocation'],
+                      // message.notification!.body![0].toString(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Icon(Icons.location_city),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields['dropOffLoacation'],
+                      // message.notification!.body![1].toString(),
+                      //"Destination Location Addressdsf ajlfsla faslk f;lasflsaf asfl;saf;",
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Divider(thickness: 2.0),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "ACCEPT",
+                  onTap: () {
+                    if (_originLatitude == 0.0 && _destLongitude == 0.0) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Somethin Wrong"),
+                        duration: Duration(seconds: 2),
+                      ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DriverMapPage(
+                                  originLatitude: _originLatitude,
+                                  originLongitude: _originLongitude,
+                                  destLatitude: _destLatitude,
+                                  destLongitude: _destLongitude,
+                                  source: from,
+                                  destination: destination,
+                                  totalPrice: totalPrice,
+                                )),
+                      );
+                    }
+                  },
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "CANCEL",
+                  onTap: () {
+                    if (isRidecancel == true) {
+                      FirebaseFirestore.instance
+                          .collection('InterCity')
+                          .doc(rideId)
+                          .collection('InterCityDataUsers')
+                          .doc(intercityid)
+                          .update({'flag': false});
+                      Future.delayed(Duration(seconds: 1), () {
+                        FirebaseFirestore.instance
+                            .collection('InterCity')
+                            .doc(rideId)
+                            .collection('InterCityDataUsers')
+                            .doc(intercityid)
+                            .delete();
+                      });
+                      setState(() {
+                        _originLatitude = 0.0;
+                        _destLongitude = 0.0;
+                      });
+                      Navigator.of(context).pop();
+                    } else {
+                      print("Already ride cancelled ");
+                    }
+                  },
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
+  void getEventRide(String? rideId, String? intercityid) {
+    FirebaseFirestore.instance
+        .collection('Events')
+        .doc(rideId)
+        .collection('EventsDataUsers')
+        .doc(intercityid)
+        .get()
+        .then((value) {
+      //'value' is the instance of 'DocumentSnapshot'
+      //'value.data()' contains all the data inside a document in the form of 'dictionary'
+      var fields = value.data();
+
+      //Using 'setState' to update the user's data inside the app
+      //firstName, lastName and title are 'initialised variables'
+      setState(() {
+        from = fields!['pickUpLocation'];
+        destination = fields['dropOffLoacation'];
+        isRidecancel = fields['flag'];
+        uId = fields['email'];
+        totalPrice = fields['totalPrice'].toString();
+        getlatLonFrom(sourceLoc: fields['pickUpLocation']);
+        getlatLonTo(destinationLoc: fields['dropOffLoacation']);
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  "New Ride Request",
+                  style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              Divider(thickness: 2.0),
+              SizedBox(height: 5.0),
+              Row(
+                children: [
+                  Icon(Icons.location_on),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields!['pickUpLocation'],
+                      // message.notification!.body![0].toString(),
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Row(
+                children: [
+                  Icon(Icons.location_city),
+                  SizedBox(width: 5.0),
+                  Flexible(
+                    child: Text(
+                      fields['dropOffLoacation'],
+                      // message.notification!.body![1].toString(),
+                      //"Destination Location Addressdsf ajlfsla faslk f;lasflsaf asfl;saf;",
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10.0),
+              Divider(thickness: 2.0),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "ACCEPT",
+                  onTap: () {
+                    if (_originLatitude == 0.0 && _destLongitude == 0.0) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text("Somethin Wrong"),
+                        duration: Duration(seconds: 2),
+                      ));
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DriverMapPage(
+                                  originLatitude: _originLatitude,
+                                  originLongitude: _originLongitude,
+                                  destLatitude: _destLatitude,
+                                  destLongitude: _destLongitude,
+                                  source: from,
+                                  destination: destination,
+                                  totalPrice: totalPrice,
+                                )),
+                      );
+                    }
+                  },
+                  color: Colors.blue,
+                ),
+              ),
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: CustomeButton(
+                  text: "CANCEL",
+                  onTap: () {
+                    if (isRidecancel == true) {
+                      FirebaseFirestore.instance
+                          .collection('Events')
+                          .doc(rideId)
+                          .collection('EventsDataUsers')
+                          .doc(intercityid)
+                          .update({'flag': false});
+                      Future.delayed(Duration(seconds: 1), () {
+                        FirebaseFirestore.instance
+                            .collection('Events')
+                            .doc(rideId)
+                            .collection('EventsDataUsers')
+                            .doc(intercityid)
+                            .delete();
+                      });
+                      setState(() {
+                        _originLatitude = 0.0;
+                        _destLongitude = 0.0;
+                      });
+                      Navigator.of(context).pop();
+                    } else {
+                      print("Already ride cancelled ");
+                    }
+                  },
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+
   getlatLonFrom({String? sourceLoc}) async {
-    print("geolatlon called From");
     try {
       List<Location> locations = await locationFromAddress(sourceLoc ?? "");
-      // print("Latitude from: ${locations[0].latitude}");
-      // print("Longitude from: ${locations[0].longitude}");
+
       setState(() {
         _originLatitude = locations[0].latitude;
         _originLongitude = locations[0].longitude;
       });
-
-      // List<Placemark> placemarks = await placemarkFromCoordinates(
-      //     locations[0].latitude, locations[0].longitude);
-      // Address address = await geoCode.reverseGeocoding(latitude: 33.691993, longitude: 73.0480956);
-      // print(placemarks);
     } catch (e) {
       print(e);
     }
   }
 
   getlatLonTo({String? destinationLoc}) async {
-    print("geolatlon called To");
     try {
       List<Location> locations =
           await locationFromAddress(destinationLoc ?? "");
-      print("Latitude to: ${locations[0].latitude}");
-      print("Longitude to: ${locations[0].longitude}");
       setState(() {
         _destLatitude = locations[0].latitude;
         _destLongitude = locations[0].longitude;
       });
-
-      // List<Placemark> placemarks = await placemarkFromCoordinates(
-      //     locations[0].latitude, locations[0].longitude);
-      // Address address = await geoCode.reverseGeocoding(latitude: 33.691993, longitude: 73.0480956);
-      // print(placemarks);
     } catch (e) {
       print(e);
     }
   }
 
-  var locationMessage = '';
-  String? latitude;
-  String? longitude;
-  String? eml;
   void getCurrentLocation() async {
     var position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
@@ -586,9 +891,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
     //Return String
     var stringValue = prefs.getString('driveremail');
     setState(() {
-      print("-------------------------------");
       eml = stringValue;
-      print(eml);
     });
     // return stringValue;
   }

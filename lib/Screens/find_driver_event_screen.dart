@@ -11,18 +11,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart' as loc;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sizer/sizer.dart';
+import 'package:travelapp/Screens/event_seat_screen.dart';
 import 'package:travelapp/Screens/poly_line_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
+import 'package:travelapp/reserveseat.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-//Daily Rides
-class CustomemapPage extends StatefulWidget {
+//InterCity Rides
+class FindDriverEventPage extends StatefulWidget {
   @override
-  CustomemapPageState createState() => CustomemapPageState();
+  FindDriverEventPageState createState() => FindDriverEventPageState();
 }
 
-class CustomemapPageState extends State<CustomemapPage> {
+class FindDriverEventPageState extends State<FindDriverEventPage> {
   TextEditingController _inpurangeController = TextEditingController();
   //final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var filterdistance;
@@ -122,17 +124,9 @@ class CustomemapPageState extends State<CustomemapPage> {
                       clongitude,
                       snapshot.data!.docs[i]['latitude'],
                       snapshot.data!.docs[i]['longitude']);
-                  if (snapshot.data!.docs[i]['servicetype'] == "Daily Rides") {
+                  if (snapshot.data!.docs[i]['servicetype'] == "Event") {
                     if (distanceInMeters / 1000 < double.parse(dist)) {
                       print("-----------if distanceInMeters-------");
-                      // print(distanceInMeters);
-                      // print("-------distanceInMeters/1000 ------------");
-                      // print(distanceInMeters / 1000);
-                      //print(double.parse(dist));
-                      //filtermarker(distanceInMeters/1000);
-                      //print(distanceInMeters);
-                      //allMarkers.clear();
-
                       allMarkers.add(Marker(
                           markerId: MarkerId(snapshot.data!.docs[i]['name']),
                           draggable: false,
@@ -677,16 +671,24 @@ class CustomemapPageState extends State<CustomemapPage> {
                           InkWell(
                             onTap: () async {
                               print("taped");
+
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PolyLinePointPage(
-                                            dname: name,
-                                            dphone: phoneno,
-                                            dservices: services,
-                                            // token: token,
-                                          )));
+                                    builder: (BuildContext context) =>
+                                        EventsReserveSeatsPage(
+                                      dirverId: phoneno,
+                                    ),
+                                    //ReserveSeatPage(
+                                    //   dirverId: phoneno,
+                                    // ),
+                                    // PolyLinePointPage(
+                                    //   dname: name,
+                                    //   dphone: phoneno,
+                                    //   dservices: services,
+                                    //   // token: token,
+                                    // )
+                                  ));
 
                               //send cu
                               // await Database.addusercrrentloc(
@@ -724,13 +726,11 @@ class CustomemapPageState extends State<CustomemapPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PolyLinePointPage(
-                                            dname: name,
-                                            dphone: phoneno,
-                                            dservices: services,
-                                            // token: token,
-                                          )));
+                                    builder: (BuildContext context) =>
+                                        EventsReserveSeatsPage(
+                                      dirverId: phoneno,
+                                    ),
+                                  ));
                             },
                             child: Container(
                                 child: Text(
@@ -748,136 +748,6 @@ class CustomemapPageState extends State<CustomemapPage> {
                   ),
                 ),
               ],
-            ),
-          );
-        });
-  }
-
-//_input range dialog
-  // _showinputDialog() async {
-  //   await showDialog<String>(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           //contentPadding: const EdgeInsets.all(16.0),
-  //           content: Container(
-  //             width: 200,
-  //             height: 150,
-  //             child: new Column(
-  //               mainAxisAlignment: MainAxisAlignment.center,
-  //               children: <Widget>[
-  //                 Text("Enter Range"),
-  //                 new TextField(
-  //                   autofocus: true,
-  //                   controller: _inpurangeController,
-  //                   decoration: new InputDecoration(
-  //                     labelText: 'Enter Range in KM*',
-  //                     hintText: '0',
-  //                     // errorText: _validate ? 'Value Can\'t Be Empty' : null,
-  //                   ),
-  //                   // onChanged: (value){
-  //                   //   setState(() {
-  //                   //     filterdistance=value;
-  //                   //   });
-  //                   //},
-  //                 ),
-  //                 // password textbox
-  //                 SizedBox(
-  //                   height: 10,
-  //                 ),
-  //                 Container(
-  //                   child: Row(
-  //                     //crossAxisAlignment: CrossAxisAlignment.start,
-  //                     mainAxisAlignment: MainAxisAlignment.center,
-  //                     children: [
-  //                       FlatButton(
-  //                           child: const Text(
-  //                             'CANCEL',
-  //                             style: TextStyle(color: Colors.blue),
-  //                           ),
-  //                           onPressed: () {
-  //                             Navigator.pop(context);
-  //                           }),
-  //                       FlatButton(
-  //                           child: const Text(
-  //                             'ok',
-  //                             style: TextStyle(color: Colors.blue),
-  //                           ),
-  //                           onPressed: () {
-  //                             setState(() {
-  //                               filterdistance = _inpurangeController.text;
-  //                             });
-  //                             Navigator.pop(context);
-  //                             _inpurangeController.clear();
-  //                           }),
-  //                     ],
-  //                   ),
-  //                 )
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
-
-  //input dialog
-  _showDialog() async {
-    await showDialog<String>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            //contentPadding: const EdgeInsets.all(16.0),
-            content: Container(
-              width: 200,
-              height: 80,
-              child: new Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Text("Location Send Successfully"),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          height: 30,
-                          //width: 50,
-                          color: primaryColor,
-                          child: FlatButton(
-                              child: const Text(
-                                'CANCEL',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 14),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        Container(
-                          height: 30,
-                          color: primaryColor,
-                          child: FlatButton(
-                              child: const Text(
-                                'OK',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                              }),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
             ),
           );
         });

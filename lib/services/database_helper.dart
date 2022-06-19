@@ -121,6 +121,7 @@ class Database {
       String? comment,
       String? vehicleType,
       String? email,
+      String? driverId,
       String? pickuptime}) async {
     var documentReferencer = _firestore
         .collection('InterCity')
@@ -136,7 +137,9 @@ class Database {
       "comment": comment,
       "vehicleType": vehicleType,
       "email": email,
-      "pickuptime": pickuptime
+      "driverid": driverId,
+      "pickuptime": pickuptime,
+      "flag": true
     };
 //add data
     await documentReferencer
@@ -145,7 +148,43 @@ class Database {
         .catchError((e) => print(e));
   }
 //end Booking data
-
+//add Event Ride data
+  static Future<void> addEventCityReserveSeat(
+      {String? pickUpLocation,
+      String? dropOffLoacation,
+      num? totalDistance,
+      num? totalPrice,
+      String? pickupDateTime,
+      DateTime? bookingDateTime,
+      String? comment,
+      String? vehicleType,
+      String? email,
+      String? driverId,
+      String? pickuptime}) async {
+    var documentReferencer = _firestore
+        .collection('Events')
+        .doc(email)
+        .collection("EventsDataUsers");
+    Map<String, dynamic> data = <String, dynamic>{
+      "bookingDateTime": bookingDateTime,
+      "dropOffLoacation": dropOffLoacation,
+      "totalDistance": totalDistance,
+      "totalPrice": totalPrice,
+      "pickUpLocation": pickUpLocation,
+      "pickupDateTime": pickupDateTime,
+      "comment": comment,
+      "vehicleType": vehicleType,
+      "email": email,
+      "driverid": driverId,
+      "pickuptime": pickuptime,
+      "flag": true
+    };
+//add data
+    await documentReferencer.add(data)
+        .whenComplete(() => print("Note item added to the database"))
+        .catchError((e) => print(e));
+  }
+//end Event data
   //add user details
   static Future<void> adduserdata(
       {String? name, String? Email, String? password, String? token}) async {
