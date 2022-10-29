@@ -8,6 +8,7 @@ class CustomeTextFormField extends StatefulWidget {
   double horizontalMergin;
   int maxLines;
   TextInputType? keyboardType;
+  final TextEditingController? controller;
   Widget? suffixIcon;
   String? Function(String?)? validator;
   CustomeTextFormField({
@@ -19,6 +20,7 @@ class CustomeTextFormField extends StatefulWidget {
     this.suffixIcon,
     this.horizontalMergin = 0.06,
     this.obscureText = false,
+    this.controller,
   }) : super(key: key);
 
   @override
@@ -39,6 +41,7 @@ class _CustomeTextFormFieldState extends State<CustomeTextFormField> {
       margin: EdgeInsets.symmetric(
           horizontal: sizeWidth(context) * widget.horizontalMergin),
       child: TextFormField(
+        controller: widget.controller,
         keyboardType: widget.keyboardType,
         validator: widget.validator,
         obscureText: _pwShow,

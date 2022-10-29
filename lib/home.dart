@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     Text(
-                      "The Travel App",
+                      "FARE SHARE",
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,

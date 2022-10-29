@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
       height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("$imgpath/signupsocialmedia.png"),
+          image: AssetImage("$imgpath/carbackground.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -94,12 +94,13 @@ class _LoginPageState extends State<LoginPage> {
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(top: 70.0, right: 280.0),
                 child: IconButton(
                   icon: Icon( Icons.arrow_back_ios_rounded,
-                  color: Colors.white,
+                  color: Colors.teal,
                   size: 30.0,
                   ),
                   onPressed: () {
@@ -112,16 +113,6 @@ class _LoginPageState extends State<LoginPage> {
                   },
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: sizeheight(context) * 0.05),
-                child: Text("The Travel App",
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal)),
-              ),
-              SizedBox(height: 20),
-              Divider(height: 5, thickness: 1, color: Colors.white),
               SizedBox(height: sizeheight(context) * 0.10),
               Container(
                 child: Column(
@@ -129,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'For Users',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.teal,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),
                     ),
@@ -141,51 +132,57 @@ class _LoginPageState extends State<LoginPage> {
                         key: _formkey,
                         child: Column(
                           children: <Widget>[
-                            Container(
-                              color: Colors.white,
-                              child: TextFormField(
-                                
-                                  validator: (input) {
-                                    if (input == null) return 'Enter Email';
-                                  },
-                                  controller: emailController,
-                                  decoration: InputDecoration(
-                                      labelText: 'Email',
-                                      prefixIcon: Icon(Icons.email)),
-                                  onSaved: (input) => _email = input),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: TextFormField(
+                                  
+                                    validator: (input) {
+                                      if (input == null) return 'Enter Email';
+                                    },
+                                    controller: emailController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Email',
+                                        prefixIcon: Icon(Icons.email)),
+                                    onSaved: (input) => _email = input),
+                              ),
                             ),
                             SizedBox(
                               height: 20.0,
                             ),
-                            Container(
-                              color: Colors.white,
-                              child: TextFormField(
-                                controller: password,
-                                obscureText: obscureText,
-                                decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        obscureText = !obscureText;
-                                      });
-                                    },
-                                    child: obscureText ? const Icon(
-                                      Icons.visibility_off,
-                                      color: Colors.grey,
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: TextFormField(
+                                  controller: password,
+                                  obscureText: obscureText,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    prefixIcon: Icon(Icons.lock),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          obscureText = !obscureText;
+                                        });
+                                      },
+                                      child: obscureText ? const Icon(
+                                        Icons.visibility_off,
+                                        color: Colors.grey,
+                                      )
+                                      : const Icon(
+                                        Icons.visibility,
+                                        color:  Colors.black,
+                                      )
                                     )
-                                    : const Icon(
-                                      Icons.visibility,
-                                      color:  Colors.black,
-                                    )
-                                  )
-                                ),
-                                //obscureText: true,
-                                validator: (input) {
-                                  if (input == null) return 'Enter Password';
-                                },
+                                  ),
+                                  //obscureText: true,
+                                  validator: (input) {
+                                    if (input == null) return 'Enter Password';
+                                  },
 
+                                ),
                               ),
                             ),
                             SizedBox(height: 10),
@@ -208,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
                                           style: TextStyle(
                                               fontSize: 18,
                                               color:
-                                                  Colors.white //Color(0xFF267D43)
+                                                  Colors.black //Color(0xFF267D43)
                                               ),
                                         ),
                                         onPressed: () {
@@ -267,13 +264,13 @@ class _LoginPageState extends State<LoginPage> {
                                 text: TextSpan(
                                   text: "Don't Have an Account? ",
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.black, fontSize: 16),
                                   children: <TextSpan>[
                                     TextSpan(
                                       text: ('Sign Up'),
                                       style: const TextStyle(
                                           decoration: TextDecoration.underline,
-                                          color: Colors.orange,
+                                          color: Colors.teal,
                                           fontSize: 18),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {

@@ -144,7 +144,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                             _settingModalBottomSheet(
                               context,
                               snapshot.data!.docs[i]['phoneno'],
-                              snapshot.data!.docs[i]['address'],
+                              //snapshot.data!.docs[i]['address'],
                               snapshot.data!.docs[i]['name'],
                               clatitude,
                               clongitude,
@@ -214,6 +214,7 @@ class CustomemapPageState extends State<CustomemapPage> {
           } else if (snapshot.hasData || snapshot.data != null) {
             print(length);
             for (int i = 0; i < snapshot.data!.docs.length; i++) {
+              if(snapshot.data!.docs[i]['servicetype'] == 'Daily Rides'){
               allMarkers.add(Marker(
                   markerId: MarkerId(snapshot.data!.docs[i]['name']),
                   draggable: false,
@@ -225,7 +226,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                     _settingModalBottomSheet(
                       context,
                       snapshot.data!.docs[i]['phoneno'],
-                      snapshot.data!.docs[i]['address'],
+                      //snapshot.data!.docs[i]['address'],
                       snapshot.data!.docs[i]['name'],
                       clatitude,
                       clongitude,
@@ -237,6 +238,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                     // print("${snapshot.data.docs[i]['phoneno']}");
                   },
                   icon: sourceIcon));
+            }
             }
             return Container(
               height: MediaQuery.of(context).size.height,
@@ -540,7 +542,7 @@ class CustomemapPageState extends State<CustomemapPage> {
   void _settingModalBottomSheet(
     context,
     dynamic phoneno,
-    dynamic addres,
+    //dynamic addres,
     dynamic name,
     dynamic currntlat,
     dynamic currentlongi,
@@ -567,7 +569,7 @@ class CustomemapPageState extends State<CustomemapPage> {
                     children: [
                       //SizedBox(height: 10.0,),
                       Text(
-                        "The Travel App",
+                        "Fare Share",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -604,20 +606,20 @@ class CustomemapPageState extends State<CustomemapPage> {
                   ),
                 ),
                 //address
-                ListTile(
-                  leading: SvgPicture.asset(
-                    'assets/images/Lcotion.svg',
-                    color: Colors.grey[800],
-                    height: 30,
-                    width: 30,
-                  ),
-                  title: Text(
-                    addres,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
+                // ListTile(
+                //   leading: SvgPicture.asset(
+                //     'assets/images/Lcotion.svg',
+                //     color: Colors.grey[800],
+                //     height: 30,
+                //     width: 30,
+                //   ),
+                //   title: Text(
+                //     addres,
+                //     style: TextStyle(
+                //       fontFamily: 'Montserrat',
+                //     ),
+                //   ),
+                // ),
                 //services
                 ListTile(
                   leading: Icon(
@@ -678,15 +680,17 @@ class CustomemapPageState extends State<CustomemapPage> {
                             onTap: () async {
                               print("taped");
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PolyLinePointPage(
-                                            dname: name,
-                                            dphone: phoneno,
-                                            dservices: services,
-                                            // token: token,
-                                          )));
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      PolyLinePointPage(
+                                    dname: name,
+                                    dphone: phoneno,
+                                    dservices: services,
+                                    // token: token,
+                                  ),
+                                ),
+                              );
 
                               //send cu
                               // await Database.addusercrrentloc(

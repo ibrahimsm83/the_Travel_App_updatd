@@ -21,11 +21,11 @@ class DrawPolyLine extends StatefulWidget {
   double totlaDistance;
   String pickupLocation;
   String dropOffLocation;
-  String? pickupDateTime;
-  String vehicleType;
-  String? comment;
-  String? pickuptime;
-  String? driverid;
+  final String? pickupDateTime;
+  final String? vehicleType;
+  final String? comment;
+  final String? pickuptime;
+  final String? driverid;
   bool isEventPage;
   DrawPolyLine({
     Key? key,
@@ -78,7 +78,7 @@ class _DrawPolyLineState extends State<DrawPolyLine> {
   Map<PolylineId, Polyline> polylines = {};
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints = PolylinePoints();
-  var kGoogleApiKey = "AIzaSyBW5iOvTYmTq9B77_bB_lHL1xsA1qT5u2Y";
+  var kGoogleApiKey = "AIzaSyDHZomR5ozaTualggVoaq5Z2fZIFC_03eQ";
   //var kGoogleApiKey = "AIzaSyDHZomR5ozaTualggVoaq5Z2fZIFC_03eQ";
   late BitmapDescriptor sourceIcon;
   late BitmapDescriptor destinationIcon;

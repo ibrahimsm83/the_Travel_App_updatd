@@ -104,14 +104,14 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     children: <Widget>[
                       Padding(
                         padding:
-                            EdgeInsets.only(top: sizeheight(context) * 0.15),
+                            EdgeInsets.only(top: sizeheight(context) * 0.20),
                         child: Text("Forget Password",
                             style: TextStyle(
-                                fontSize: 30.0,
+                                fontSize: 25.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.teal)),
                       ),
-                      SizedBox(height: sizeheight(context) * 0.20),
+                      SizedBox(height: sizeheight(context) * 0.15),
                       Container(
                           child: Form(
                               key: _formKey,

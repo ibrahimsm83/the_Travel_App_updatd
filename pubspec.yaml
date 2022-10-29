@@ -64,8 +64,15 @@ dependencies:
   date_format: ^2.0.5
   fluttertoast: ^8.0.8
   firebase_messaging: ^11.2.8
+  flutter_launcher_icons: ^0.9.3
+  get_storage: ^2.0.3
   # fluttertoast: ^8.0.8
   # rxdart: ^0.27.3
+
+flutter_icons:
+  image_path: "assets/images/appicon.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:

@@ -103,14 +103,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     children: <Widget>[
                       Padding(
                         padding:
-                            EdgeInsets.only(top: sizeheight(context) * 0.15),
-                        child: Text("The Travel App",
+                            EdgeInsets.only(top: sizeheight(context) * 0.20),
+                        child: Text("Fare Share",
                             style: TextStyle(
                                 fontSize: 30.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.teal)),
                       ),
-                      SizedBox(height: sizeheight(context) * 0.20),
+                      SizedBox(height: sizeheight(context) * 0.10),
                       Container(
                           child: Form(
                               key: _formKey,

@@ -1,15 +1,18 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/bottomnav.dart';
 import 'package:travelapp/rideconfirmed.dart';
 import 'package:travelapp/services/database_helper.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:travelapp/services/local_push_notification.dart';
 import 'package:travelapp/widgets/custome_snackbar.dart';
 //import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:number_inc_dec/number_inc_dec.dart';
@@ -71,15 +74,15 @@ class _PaymentsPageState extends State<PaymentsPage> {
     print("Device token payment ");
     //print(widget.token);
     super.initState();
-    // var androidInitilize = new AndroidInitializationSettings('logo');
-    // var iOSinit = new IOSInitializationSettings();
-    // var initSettings =
-    //     new InitializationSettings(android: androidInitilize, iOS: iOSinit);
-    // localNotif = new FlutterLocalNotificationsPlugin();
-    // localNotif.initialize(initSettings);
-    // FirebaseMessaging.onMessage.listen((event) {
-    //   LocalNotificationService.display(event);
-    // });
+    var androidInitilize = new AndroidInitializationSettings('logo');
+    var iOSinit = new IOSInitializationSettings();
+    var initSettings =
+        new InitializationSettings(android: androidInitilize, iOS: iOSinit);
+    localNotif = new FlutterLocalNotificationsPlugin();
+    localNotif.initialize(initSettings);
+    FirebaseMessaging.onMessage.listen((event) {
+      //RLocalNotificationService.display(event);
+    });
     // storeNotificationToken();
   }
 
@@ -171,7 +174,10 @@ class _PaymentsPageState extends State<PaymentsPage> {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      BottomNav(),
+                                );
                   },
                   icon: Icon(Icons.arrow_back_ios),
                   color: Colors.white,
@@ -323,11 +329,17 @@ class _PaymentsPageState extends State<PaymentsPage> {
                       SizedBox(
                         height: 5,
                       ),
-                      Divider(
-                        height: 0.1,
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
+                      Padding(
+                          padding: const EdgeInsets.only(
+                              top: 20.0, left: 20.0, right: 20.0),
+                          child: Text(
+                            "Driver Info.",
+                            style: TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.left,
+                          )),
                       ListTile(
                         leading: Icon(
                           Icons.person,
@@ -369,82 +381,80 @@ class _PaymentsPageState extends State<PaymentsPage> {
                         ),
                         //Text("Address"),
                       ),
-                      Divider(
-                        height: 0.1,
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 8.0),
                       Align(
                         alignment: Alignment.topCenter,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              now = DateTime.now();
-                              time = DateFormat('dd-MM-yyyy').format(now);
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              setState(() {
+                                now = DateTime.now();
+                                time = DateFormat('dd-MM-yyyy').format(now);
+                                flag = true;
+                              });
                               flag = true;
-                            });
-                            flag = true;
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            //Return String
-                            var userEmail = prefs.getString('useremail');
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              //Return String
+                              var userEmail = prefs.getString('useremail');
 
-                            // add data in db of dailyrides
-                            await Database.addDailyRide(
-                                from: widget.origin,
-                                destination: widget.destination,
-                                totalDistance: widget.totalDistance,
-                                totalPrice: widget.totalPrice,
-                                dateTime: now,
-                                driverid: widget.phone,
-                                email: userEmail,
-                                userid: userEmail,
-                                flag: flag);
-                            CustomSnacksBar.showSnackBar(
-                                context, "Request Send Successfully");
-                            // _showMessageInScaffold("Request Send Successfully");
-                            // String? token =
-                            //     "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
-                            // _showNotification();
-                            // FirebaseFirestore.instance
-                            //     .collection('UsersData')
-                            //     .doc(FirebaseAuth.instance.currentUser!.email)
-                            //     .set({}, SetOptions(merge: true));
-                            // sendNotification('Trip', token!);
-                            // _showMessageInScaffold("Ride Conform Successfully");
-                            //add data end
-                            Future.delayed(Duration(seconds: 5), () {
-                              // 5s over, navigate to a new page
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => RideConfirmed()),
-                              );
-                            });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 17.0,
-                                bottom: 17.0,
-                                left: 40.0,
-                                right: 40.0),
-                            child: Text(
-                              'Confirm Ride',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0,
-                                  fontFamily: 'Montserrat',
-                                  fontWeight: FontWeight.w300),
+                              // add data in db of dailyrides
+                              await Database.addDailyRide(
+                                  from: widget.origin,
+                                  destination: widget.destination,
+                                  totalDistance: widget.totalDistance,
+                                  totalPrice: widget.totalPrice,
+                                  dateTime: now,
+                                  driverid: widget.phone,
+                                  email: userEmail,
+                                  userid: userEmail,
+                                  flag: flag);
+                              CustomSnacksBar.showSnackBar(
+                                  context, "Request Send Successfully");
+                              // _showMessageInScaffold("Request Send Successfully");
+                              // String? token =
+                              //     "cBVGGIEkSseAn_rpZJvSGI:APA91bF4Znmpz7mRuRdwJjNLlpg1pzvM19E25-8Wv8phbNb_qgeqjE7F6rxoO-BbjGOe4AQ7ikNF52QMCpDV5jtCFcL0Duqoq7L1IIooUHecsYzu6jcSNlgu6pMtot0jA4tSoMBYZvGY";
+                              _showNotification();
+                              // FirebaseFirestore.instance
+                              //     .collection('UsersData')
+                              //     .doc(FirebaseAuth.instance.currentUser!.email)
+                              //     .set({}, SetOptions(merge: true));
+                              // sendNotification('Trip', token!);
+                              // _showMessageInScaffold("Ride Conform Successfully");
+                              //add data end
+                              Future.delayed(Duration(seconds: 5), () {
+                                // 5s over, navigate to a new page
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RideConfirmed()),
+                                );
+                              });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 17.0,
+                                  bottom: 17.0,
+                                  left: 40.0,
+                                  right: 40.0),
+                              child: Text(
+                                'Confirm Ride',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15.0,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.w300),
+                              ),
                             ),
-                          ),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                            )),
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.grey[800]),
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0),
+                              )),
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.grey[800]),
+                            ),
                           ),
                         ),
                       ),

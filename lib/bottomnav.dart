@@ -41,8 +41,8 @@ class _BottomNavState extends State<BottomNav> {
               label: "Home",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_rounded),
-              label: "Notification"
+              icon: Icon(Icons.info_rounded),
+              label: "About Us"
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.support_rounded),

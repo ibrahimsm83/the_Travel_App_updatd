@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    new Future.delayed(const Duration(milliseconds: 500), () {
+    new Future.delayed(const Duration(milliseconds: 1200), () {
       navigateUser();
       // Navigator.of(context).pushReplacement(MaterialPageRoute(
       //     builder: (BuildContext context) => Start()));
@@ -29,14 +29,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        image: DecorationImage(
-          colorFilter: ColorFilter.mode(Colors.black38, BlendMode.darken),
-          image: AssetImage('$imgpath/spsc.png'),
-          fit: BoxFit.cover,
-        ),
+        // image: DecorationImage(
+        //   //colorFilter: ColorFilter.mode(Colors.black),
+        //   image: AssetImage('$imgpath/spsc.png'),
+        //   fit: BoxFit.cover,
+        // ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.transparent,
+        //backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             Container(
@@ -52,14 +52,18 @@ class _SplashScreenState extends State<SplashScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "TravelApp",
-                          style: TextStyle(
-                              fontSize: 38,
-                              fontWeight: FontWeight.bold,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.teal),
-                        ),
+                        Image.asset(
+                          '$imgpath/app_logo.png',
+                          width: 300
+                        )
+                        // Text(
+                        //   "TravelApp",
+                        //   style: TextStyle(
+                        //       fontSize: 38,
+                        //       fontWeight: FontWeight.bold,
+                        //       fontStyle: FontStyle.italic,
+                        //       color: Colors.teal),
+                        // ),
                         // Container(
                         //     height: 40,
                         //     width: 40,

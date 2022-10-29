@@ -7,7 +7,7 @@ import 'package:travelapp/models/place_search.dart';
 class PlacesService {
   var dio = Dio();
 
-  final key = "AIzaSyBW5iOvTYmTq9B77_bB_lHL1xsA1qT5u2Y";
+  final key = "AIzaSyDHZomR5ozaTualggVoaq5Z2fZIFC_03eQ";
   Future<List<PlaceSearch>> getAutoComplete(String search) async {
     var url =
         "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$search&types=(cities)&key=$key";

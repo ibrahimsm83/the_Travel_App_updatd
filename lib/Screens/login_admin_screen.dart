@@ -73,10 +73,11 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
             actions: <Widget>[
               // ignore: deprecated_member_use
               FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('OK'))
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('OK'),
+              ),
             ],
           );
         });
@@ -89,7 +90,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
       height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("$imgpath/signupsocialmedia.png"),
+          image: AssetImage("$imgpath/carbackground.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -101,23 +102,22 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
               Padding(
                 padding: const EdgeInsets.only(top: 70.0, right: 280.0),
                 child: IconButton(
-                  icon: Icon( Icons.arrow_back_ios_rounded,
-                  color: Colors.white,
-                  size: 30.0,
+                  icon: Icon(
+                    Icons.arrow_back_ios_rounded,
+                    color: Colors.teal,
+                    size: 30.0,
                   ),
                   onPressed: () {
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => MainScreen()
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => MainScreen()));
                   },
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(top: sizeheight(context) * 0.05),
-                child: Text("The Travel App",
+                child: Text("Fare Share",
                     style: TextStyle(
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
@@ -132,7 +132,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                     Text(
                       'For Admin',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.teal,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),
                     ),
@@ -155,7 +155,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                     if (input == null) return 'Enter Email';
                                   },
                                   controller: _emailController,
-                                  
                                   decoration: InputDecoration(
                                       labelText: 'Email',
                                       prefixIcon: Icon(Icons.email)),
@@ -170,24 +169,23 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                 controller: _passwordController,
                                 obscureText: obscureText,
                                 decoration: InputDecoration(
-                                  labelText: 'Password',
-                                  prefixIcon: Icon(Icons.lock),
-                                  suffixIcon: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        obscureText = !obscureText;
-                                      });
-                                    },
-                                    child: obscureText ? const Icon(
-                                      Icons.visibility_off,
-                                      color: Colors.grey,
-                                    )
-                                    : const Icon(
-                                      Icons.visibility,
-                                      color:  Colors.black,
-                                    )
-                                  )
-                                ),
+                                    labelText: 'Password',
+                                    prefixIcon: Icon(Icons.lock),
+                                    suffixIcon: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            obscureText = !obscureText;
+                                          });
+                                        },
+                                        child: obscureText
+                                            ? const Icon(
+                                                Icons.visibility_off,
+                                                color: Colors.grey,
+                                              )
+                                            : const Icon(
+                                                Icons.visibility,
+                                                color: Colors.black,
+                                              ))),
                                 //obscureText: true,
                                 validator: (input) {
                                   if (input == null) return 'Enter Password';
@@ -232,19 +230,17 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                           "Forgot Passsword?",
                                           style: TextStyle(
                                               fontSize: 18,
-                                              color:
-                                                  Colors.white //Color(0xFF267D43)
+                                              color: Colors
+                                                  .teal //Color(0xFF267D43)
                                               ),
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder:
-                                                      (BuildContext context) =>
-                                                          ForgetPasswordScreen()
-                                              )
-                                          );
+                                                  builder: (BuildContext
+                                                          context) =>
+                                                      ForgetPasswordScreen()));
                                         },
                                       )),
                                 ),
@@ -259,14 +255,16 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                               child: RaisedButton(
                                 padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
                                 onPressed: () {
-                                  if (_formkey.currentState!.validate() ) {
-                                    if( _emailController.text == email && _passwordController.text == password){
+                                  if (_formkey.currentState!.validate()) {
+                                    if (_emailController.text == email &&
+                                        _passwordController.text == password) {
                                       print("Driver login");
-                                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                      builder: (_) => AdminMainPage()));
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (_) => AdminMainPage()));
                                     }
                                     // login(emailController.text, password.text);
-                                    
+
                                     //_signInWithEmailAndPassword();
                                     // Navigator.of(context).pushReplacement(MaterialPageRoute(
                                     //     builder: (BuildContext context) => UserDeshboardScreen()));
@@ -287,8 +285,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                                 ),
                               ),
                             ),
-                           
-                            
                           ],
                         ),
                       ),

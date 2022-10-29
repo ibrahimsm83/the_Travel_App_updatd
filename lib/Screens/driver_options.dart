@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:travelapp/Screens/login_admin_screen.dart';
 import 'package:travelapp/Screens/login_driver_screen.dart';
 import 'package:travelapp/Screens/login_user_screen.dart';
+import 'package:travelapp/Screens/signup_driver_screen.dart';
+import 'package:travelapp/Screens/signup_for_sharing_driver.dart';
 import 'package:travelapp/Utils/constants.dart';
 
-class MainScreen extends StatefulWidget {
+class DriverOptions extends StatefulWidget {
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _DriverOptionsState createState() => _DriverOptionsState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _DriverOptionsState extends State<DriverOptions> {
   @override
   Widget build(BuildContext context) {
     final double btnmargsize = MediaQuery.of(context).size.width * 0.09;
@@ -45,7 +47,7 @@ class _MainScreenState extends State<MainScreen> {
                 //SizedBox(height: 10.0),
                 //SizedBox(height: sizeheight(context) * 0.02),
                 Text(
-                  'For Users',
+                  'For Car Sharing',
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20.0,
@@ -62,7 +64,7 @@ class _MainScreenState extends State<MainScreen> {
                       padding: EdgeInsets.only(left: 30, right: 30),
                       onPressed: () {
                         Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => LoginPage()));
+                            MaterialPageRoute(builder: (_) => SignUpForSharingDriver()));
                       },
                       child: Text(
                         'LOGIN',
@@ -82,7 +84,7 @@ class _MainScreenState extends State<MainScreen> {
                   height: 30,
                 ),
                 Text(
-                  'For Driver',
+                  'For Normal Use',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.bold,
@@ -97,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                       padding: EdgeInsets.only(left: 30, right: 30),
                       onPressed: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => DriverLoginPage()));
+                            builder: (_) => SignUpDriverPage()));
                       },
                       child: Text(
                         'LOGIN',
@@ -116,37 +118,37 @@ class _MainScreenState extends State<MainScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                Text(
-                  'For Admin',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                Container(
-                  width: sizeWidth(context),
-                  margin:
-                      EdgeInsets.only(left: btnmargsize, right: btnmargsize),
-                  child: RaisedButton(
-                      padding: EdgeInsets.only(left: 30, right: 30),
-                      onPressed: () {
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (_) => AdminLoginPage()));
-                      },
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      color: primaryColor),
-                ),
+                // Text(
+                //   'For Admin',
+                //   style: TextStyle(
+                //     fontSize: 20.0,
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.white,
+                //   ),
+                // ),
+                // Container(
+                //   width: sizeWidth(context),
+                //   margin:
+                //       EdgeInsets.only(left: btnmargsize, right: btnmargsize),
+                //   child: RaisedButton(
+                //       padding: EdgeInsets.only(left: 30, right: 30),
+                //       onPressed: () {
+                //         Navigator.of(context).pushReplacement(MaterialPageRoute(
+                //             builder: (_) => AdminLoginPage()));
+                //       },
+                //       child: Text(
+                //         'LOGIN',
+                //         style: TextStyle(
+                //           fontSize: 18,
+                //           fontWeight: FontWeight.bold,
+                //           color: Colors.white,
+                //         ),
+                //       ),
+                //       shape: RoundedRectangleBorder(
+                //         borderRadius: BorderRadius.circular(10.0),
+                //       ),
+                //       color: primaryColor),
+                // ),
               ],
             ),
           ],

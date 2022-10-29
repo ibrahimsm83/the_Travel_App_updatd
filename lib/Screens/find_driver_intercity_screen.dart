@@ -597,20 +597,20 @@ class FindDriverInterCityPageState extends State<FindDriverInterCityPage> {
                   ),
                 ),
                 //address
-                ListTile(
-                  leading: SvgPicture.asset(
-                    'assets/images/Lcotion.svg',
-                    color: Colors.grey[800],
-                    height: 30,
-                    width: 30,
-                  ),
-                  title: Text(
-                    addres,
-                    style: TextStyle(
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
+                // ListTile(
+                //   leading: SvgPicture.asset(
+                //     'assets/images/Lcotion.svg',
+                //     color: Colors.grey[800],
+                //     height: 30,
+                //     width: 30,
+                //   ),
+                //   title: Text(
+                //     addres,
+                //     style: TextStyle(
+                //       fontFamily: 'Montserrat',
+                //     ),
+                //   ),
+                // ),
                 //services
                 ListTile(
                   leading: Icon(

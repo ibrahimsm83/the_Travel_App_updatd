@@ -76,7 +76,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10.0),
                         child: Container(
-                          height: heigh*0.4,
+                          height: heigh*0.37,
                           decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
@@ -218,33 +218,33 @@ class _AdminHomePageState extends State<AdminHomePage> {
                                   ],
                                 ),
                                 SizedBox(height: 8.0),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      color: Colors.black,
-                                      size: 25.0,
-                                    ),
-                                    SizedBox(width: 5.0),
-                                    Container(
-                                      width: 250,
-                                      child: Text(
-                                        // "PAF-KIET Main Campus Karachi",
-                                        snapshot.data!.docs[index]['address'],
+                                // Row(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Icon(
+                                //       Icons.location_on,
+                                //       color: Colors.black,
+                                //       size: 25.0,
+                                //     ),
+                                //     SizedBox(width: 5.0),
+                                //     Container(
+                                //       width: 250,
+                                //       child: Text(
+                                //         // "PAF-KIET Main Campus Karachi",
+                                //         snapshot.data!.docs[index]['address'],
 
-                                        // snapshot.data!.docs[index]
-                                        //     ['vehicleType'],
-                                        style: TextStyle(
-                                            fontFamily: 'Montserrat',
-                                            fontSize: 15.0,
-                                            fontWeight: FontWeight.w100,
-                                            color: Colors.black),
-                                      ),
-                                    ),
+                                //         // snapshot.data!.docs[index]
+                                //         //     ['vehicleType'],
+                                //         style: TextStyle(
+                                //             fontFamily: 'Montserrat',
+                                //             fontSize: 15.0,
+                                //             fontWeight: FontWeight.w100,
+                                //             color: Colors.black),
+                                //       ),
+                                //     ),
                                     
-                                  ],
-                                ),
+                                //   ],
+                                // ),
                                 SizedBox(height: 8.0),
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,

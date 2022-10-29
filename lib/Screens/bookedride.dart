@@ -53,28 +53,30 @@ class _BookedRideState extends State<BookedRide> {
       backgroundColor: Colors.grey[800],
       body: ListView(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => BottomNav()));
-                },
-                icon: Icon(Icons.arrow_back_ios),
-                color: Colors.white,
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => BottomNav()));
-                },
-                icon: Icon(
-                  Icons.home,
+          SingleChildScrollView(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => BottomNav()));
+                  },
+                  icon: Icon(Icons.arrow_back_ios),
                   color: Colors.white,
                 ),
-              ),
-            ],
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => BottomNav()));
+                  },
+                  icon: Icon(
+                    Icons.home,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
           Padding(
               padding: EdgeInsets.only(left: 30.0),
@@ -106,7 +108,7 @@ class _BookedRideState extends State<BookedRide> {
                     padding: const EdgeInsets.only(
                         top: 40.0, left: 20.0, right: 20.0),
                     child: Text(
-                      "Your Ride has been confirmed",
+                      "Ride in process",
                       style: TextStyle(
                           fontFamily: 'Montserrat',
                           fontSize: 25.0,

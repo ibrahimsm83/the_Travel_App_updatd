@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math';
 //import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import 'package:location/location.dart' as loc;
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/login_driver_screen.dart';
+import 'package:travelapp/Screens/request_ride_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/Utils/extensions.dart';
 import 'package:travelapp/services/database_helper.dart';
@@ -27,20 +29,20 @@ Future<void> saveTokenToDatabase(String token) async {
   //var data = await FirebaseFirestore.instance.collection('Drivers').doc().get();
   //print(data);
   await FirebaseFirestore.instance
-      .collection('Drivers')
-      .doc("342312345")
+      .collection('SharingDriver')
+      .doc("KidEhajL2EktpAa0rJlb")
       .update({
     'tokens': //token,
         FieldValue.arrayUnion([token]),
   });
 }
 
-class SignUpDriverPage extends StatefulWidget {
+class SignUpForSharingDriver extends StatefulWidget {
   @override
-  _SignUpDriverPageState createState() => _SignUpDriverPageState();
+  _SignUpForSharingDriverState createState() => _SignUpForSharingDriverState();
 }
 
-class _SignUpDriverPageState extends State<SignUpDriverPage> {
+class _SignUpForSharingDriverState extends State<SignUpForSharingDriver> {
   var locationMessage = '';
   String? latitude;
   String? longitude;
@@ -97,7 +99,7 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
   Future<void> setupToken() async {
     // Get the token each time the application loads
     String? token = await FirebaseMessaging.instance.getToken();
-    log("device token is created ${token}");
+    // log("device token is created ${token}");
     // Save the initial token to the database
     await saveTokenToDatabase(token!);
 
@@ -137,6 +139,7 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
   double _originLatitude = 0.0, _originLongitude = 0.0;
   double _destLatitude = 0.0, _destLongitude = 0.0;
   String? _email, _password, _name;
+  int divValue = 1;
 
   var pickup, dropoff;
   @override
@@ -157,7 +160,6 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
     _servicesController.dispose();
     _seatsController.dispose();
     _carnoController.dispose();
-    
     super.dispose();
   }
 
@@ -203,7 +205,7 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                           children: <Widget>[
                             Container(
                               child: Text(
-                                'Driver Register',
+                                'Driver Register Sharing',
                                 style: TextStyle(
                                   fontSize: 30.0,
                                   color: Colors.black,
@@ -266,7 +268,28 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                     },
                                     controller: _pickupaddressController,
                                     decoration: InputDecoration(
-                                      labelText: 'Set Address',
+                                      labelText: 'Set Pickup Address',
+                                      prefixIcon: Icon(
+                                        Icons.location_on_outlined,
+                                      ),
+                                    ),
+                                    onSaved: (input) => _name = input),
+                              ),
+                            ),
+                            /*--------------------------------address---------------------------------------------*/
+                            Container(
+                              child: InkWell(
+                                onTap: () async {
+                                  _handlePressButton(1);
+                                },
+                                child: TextFormField(
+                                    enabled: false,
+                                    validator: (input) {
+                                      if (input == null) return 'Enter address';
+                                    },
+                                    controller: _dropoffaddressController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Set Dropoff Address',
                                       prefixIcon: Icon(
                                         Icons.location_on_outlined,
                                       ),
@@ -353,36 +376,38 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                 },
                               ),
                             ),
-                            Container(
-                              child: DropdownButtonFormField<String>(
-                                //value: dropdownvalue,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.emoji_transportation),
-                                ),
-                                hint: Text('Select Service'),
-                                items: <String>[
-                                  'Daily Rides',
-                                  'Intercity',
-                                  'Event'
-                                ].map((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: new Text(value),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  print(value);
-                                  setState(() {
-                                    dropdownvalue = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(height: 20),
+                            // Container(
+                            //   child: DropdownButtonFormField<String>(
+                            //     //value: dropdownvalue,
+                            //     decoration: InputDecoration(
+                            //       prefixIcon: Icon(Icons.emoji_transportation),
+                            //     ),
+                            //     hint: Text('Select Service'),
+                            //     items: <String>[
+                            //       'Daily Rides',
+                            //       'Sharing',
+                            //       'Intercity',
+                            //       'Event'
+                            //     ].map((String value) {
+                            //       return DropdownMenuItem<String>(
+                            //         value: value,
+                            //         child: new Text(value),
+                            //       );
+                            //     }).toList(),
+                            //     onChanged: (value) {
+                            //       print(value);
+                            //       setState(() {
+                            //         dropdownvalue = value;
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
+                            // SizedBox(height: 20),
                             // ignore: deprecated_member_use
                             RaisedButton(
                               padding: EdgeInsets.fromLTRB(70, 10, 70, 10),
                               onPressed: () async {
+                                var totalDistance;
                                 if (_formKey.currentState!.validate()) {
                                   String? devicetoken = await FirebaseMessaging
                                       .instance
@@ -394,33 +419,15 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                       _emailController.text.isNotEmpty &&
                                       _passwordController.text.isNotEmpty &&
                                       _seatsController.text.isNotEmpty &&
-                                      _carnoController.text.isNotEmpty &&
-                                      dropdownvalue != "Select Service") {
-                                    if (((int.parse(_seatsController.text)) <=
-                                                3 &&
-                                            (dropdownvalue == "Daily Rides" ||
-                                                dropdownvalue ==
-                                                    "Intercity")) ||
-                                        ((int.parse(_seatsController.text)) >=
-                                                3 &&
-                                            (int.parse(_seatsController.text)) <
-                                                7 &&
-                                            (dropdownvalue == "Event" ||
-                                                dropdownvalue ==
-                                                    "Intercity")) ||
-                                        ((int.parse(_seatsController.text)) >=
-                                                7 &&
-                                            (dropdownvalue == "Event" ||
-                                                dropdownvalue ==
-                                                    "Intercity"))) {
-                                                      await Database.addDriverDetails(
+                                      _carnoController.text.isNotEmpty) {
+                                                      await Database.addSharingDriverDetails(
                                       name: _nameController.text,
                                       phono: _phonenoController.text,
                                       city: _cityController.text,
-                                      address:
+                                      pickupaddress:
                                           _pickupaddressController.text,
-                                      // dropoffaddress:
-                                      //     _dropoffaddressController.text,
+                                      dropoffaddress:
+                                          _dropoffaddressController.text,
                                       services: _servicesController.text,
                                       carno: _carnoController.text,
                                       Email: _emailController.text,
@@ -428,45 +435,25 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
                                       latitude: double.parse(latitude!),
                                       longitude: double.parse(longitude!),
                                       seats: int.parse(_seatsController.text),
-                                      servicetype: dropdownvalue,
                                       token: devicetoken,
+                                      orgnlat: _originLatitude,
+                                      orgnlong: _originLongitude,
+                                      destlat: _destLatitude,
+                                      destlong: _destLongitude,
+                                      calculatedPrice: totalDistance = calculateDistance(
+                                                    _originLatitude,
+                                                    _originLongitude,
+                                                    _destLatitude,
+                                                    _destLongitude,
+                                                  ) * 30,
+                                      divisionValue : 1,
                                     );
                                     //_showMessageInScaffold("Registered Successfully${locationMessage}");
                                     _showMessageInScaffold(
                                         "Registered Successfully");
                                     _register();
-                                  } else {
-                                    _showMessageInScaffold(
-                                        "Please Fill all Fields");
-                                  }
-                                                    }
-                                  //   else if (dropdownvalue == 'Sharing' &&
-                                  //       _pickupaddressController
-                                  //           .text.isNotEmpty &&
-                                  //       _dropoffaddressController
-                                  //           .text.isNotEmpty) {
-                                  //             await Database.addDriverDetails(
-                                  //     name: _nameController.text,
-                                  //     phono: _phonenoController.text,
-                                  //     city: _cityController.text,
-                                  //     address:
-                                  //         _pickupaddressController.text,
-                                  //     services: _servicesController.text,
-                                  //     carno: _carnoController.text,
-                                  //     Email: _emailController.text,
-                                  //     password: _passwordController.text,
-                                  //     latitude: double.parse(latitude!),
-                                  //     longitude: double.parse(longitude!),
-                                  //     seats: int.parse(_seatsController.text),
-                                  //     servicetype: dropdownvalue,
-                                  //     token: devicetoken,
-                                  //   );
-                                  //   //_showMessageInScaffold("Registered Successfully${locationMessage}");
-                                  //   _showMessageInScaffold(
-                                  //       "Registered Successfully");
-                                  //   _register();
-                                  // } 
-                                  else {
+                                    }
+                                     else {
                                     _showMessageInScaffold(
                                         "Please Fill all Fields");
                                   }
@@ -599,17 +586,17 @@ class _SignUpDriverPageState extends State<SignUpDriverPage> {
     }
   }
 
-  //Calculate Distance in Km
-  // double calculateDistance(
-  //     _originLatitude, _originLongitude, _destLatitude, _destLongitude) {
-  //   var p = 0.017453292519943295;
-  //   var c = cos;
-  //   var a = 0.5 -
-  //       c((_destLatitude - _originLatitude) * p) / 2 +
-  //       c(_originLatitude * p) *
-  //           c(_destLatitude * p) *
-  //           (1 - c((_destLongitude - _originLongitude) * p)) /
-  //           2;
-  //   return 12742 * asin(sqrt(a));
-  // }
+  // Calculate Distance in Km
+  double calculateDistance(
+      _originLatitude, _originLongitude, _destLatitude, _destLongitude) {
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((_destLatitude - _originLatitude) * p) / 2 +
+        c(_originLatitude * p) *
+            c(_destLatitude * p) *
+            (1 - c((_destLongitude - _originLongitude) * p)) /
+            2;
+    return 12742 * asin(sqrt(a));
+  }
 }

@@ -7,6 +7,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:travelapp/Screens/driver_profile_screen.dart';
+import 'package:travelapp/Screens/finish_trip_screen.dart';
 import 'package:travelapp/Screens/splash_screen.dart';
 import 'package:travelapp/widgets/custome_snackbar.dart';
 import 'blocs/application_bloc.dart';
@@ -198,9 +199,13 @@ you can register a GlobalKey as the navigatorKey property of your MaterialApp,
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(
+          theme: ThemeData(
+            fontFamily: 'Montserrat',
+          ),
           navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           home: SplashScreen(),
+          //home: FinishTripPage(),
         );
       },
     );

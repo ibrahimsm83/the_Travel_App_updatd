@@ -2,8 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelapp/Screens/collect_cash_screen.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Utils/constants.dart';
+import 'package:travelapp/notification.dart';
 import 'package:travelapp/services/database_helper.dart';
 
 import 'Screens/history.dart';
@@ -123,26 +125,49 @@ class _ProPageState extends State<ProPage> {
                             Container(
                               child: Column(
                                 children: [
+                                  // new ListTile(
+                                  //   title: new Text(
+                                  //     'Profile',
+                                  //     style: TextStyle(
+                                  //       color: Colors.black,
+                                  //       fontFamily: 'Montserrat',
+                                  //     ),
+                                  //   ),
+                                  //   trailing: new Icon(Icons.account_box),
+                                  // ),
                                   new ListTile(
                                     title: new Text(
-                                      'Profile',
+                                      'About Us',
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Montserrat',
                                       ),
                                     ),
-                                    trailing: new Icon(Icons.account_box),
+                                    trailing: new Icon(Icons.info_outline_rounded),
+                                    onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        NotifPage()));
+                                      }
                                   ),
                                   new ListTile(
-                                    title: new Text(
-                                      'Help',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
+                                      title: new Text(
+                                        'Wallet',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'Montserrat',
+                                        ),
                                       ),
-                                    ),
-                                    trailing: new Icon(Icons.help),
-                                  ),
+                                      trailing: new Icon(Icons.wallet_rounded),
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        WalletPage()));
+                                      }),
                                   new ListTile(
                                       title: new Text(
                                         'History',
@@ -209,169 +234,216 @@ class _ProPageState extends State<ProPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 30.0),
-            RichText(
-                text: TextSpan(
-                    text: 'Welcome to ',
-                    style: TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'Montserrat',
-                    ),
-                    children: <TextSpan>[
-                  TextSpan(
-                      text: 'Travel App ',
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontFamily: 'Montserrat',
-                      ))
-                ])),
-            SizedBox(height: 15),
-            // Container(
-            //   //color: Colors.amber,
-            //   //height: 150,
-            //   width: sizeWidth(context),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     children: [
-            //       Text(
-            //         "Driver",
-            //         style: TextStyle(
-            //             fontSize: 38,
-            //             fontWeight: FontWeight.bold,
-            //             fontStyle: FontStyle.italic,
-            //             color: Colors.white),
-            //       ),
-            //       SizedBox(
-            //         width: 20,
-            //       ),
-            //       Container(
-            //           height: 40,
-            //           width: 40,
-            //           child: Image.asset(
-            //             "$imgpath/car.png",
-            //             color: Colors.black,
-            //             height: 40,
-            //             width: 40,
-            //             //  cacheColorFilter: true,
-            //           )),
-            //     ],
-            //   ),
-            // ),
+        child: Container(
+          child: SafeArea(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Database.readuserdata(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError && snapshot.data == null) {
+                  return Text('Something went wrong');
+                } else if (snapshot.hasData || snapshot.data != null) {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        if (snapshot.data!.docs[index]['UEmail'] == eml) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Column(
+                                //mainAxisAlignment:
+                                //MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(height: 15),
+                                  RichText(
+                                      text: TextSpan(
+                                          text: 'Welcome to ',
+                                          style: TextStyle(
+                                            fontSize: 25.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                            fontFamily: 'Montserrat',
+                                          ),
+                                          children: <TextSpan>[
+                                        TextSpan(
+                                            text: 'Fare Share',
+                                            style: TextStyle(
+                                              fontSize: 30.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                              fontFamily: 'Montserrat',
+                                            ))
+                                      ])),
+                                  SizedBox(height: 15),
+                                  SizedBox(
+                                    height: 1,
+                                  ),
+                                  Divider(
+                                    height: 0.1,
+                                    thickness: 1,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 25.0,
+                                          bottom: 15.0,
+                                        ),
+                                        child: Text(
+                                          "User",
+                                          style: TextStyle(
+                                              fontFamily: 'Montserrat',
+                                              color: Colors.black,
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      // SizedBox(
+                                      //   height: 20,
+                                      // ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.90,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.grey,
+                                                width: 1,
+                                              )),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child:
+                                                      Icon(Icons.email_rounded),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "Email ",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data!.docs[index]
+                                                          ['UEmail'],
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 15.0,
+                                      ),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.09,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.90,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                              width: 1,
+                                            ),
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Icon(
+                                                      Icons.account_circle),
+                                                ),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "User Name ",
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      snapshot.data!.docs[index]
+                                                          ['uname'],
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black,
+                                                        fontFamily:
+                                                            'Montserrat',
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          );
+                        } else
+                          return SizedBox();
+                      });
+                }
 
-            //SizedBox(height: 5),
-
-            // SizedBox(height: 10.0),
-            // Text(
-            //   'Driver at your spot',
-            //   style: TextStyle(color: Colors.white),
-            // ),
-            // SizedBox(
-            //   height: 10,
-            // ),
-            // Divider(
-            //   height: 5,
-            //   thickness: 1,
-            //   color: Colors.white,
-            // ),
-
-            // SizedBox(
-            //   height: 30.0,
-            // ),
-
-            // SizedBox(
-            //   height: 10.0,
-            // ),
-            /* //Login Buttons
-            Container(
-                width: sizeWidth(context),
-                margin: EdgeInsets.only(left: btnmargsize, right: btnmargsize),
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-                child: ElevatedButton(
-                  child: Text(
-                    "Find Driver",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: () async {
-                    print("access --------------------------loc");
-                    var position = await Geolocator.getCurrentPosition(
-                        desiredAccuracy: LocationAccuracy.high);
-                    var lat = position.latitude;
-                    var long = position.longitude;
-                 
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CustomemapPage()));
-
-                    // MaterialPageRoute(builder: (context) => CustomemapPage(latitud: lat,longit: long ,showallmech: _checkbox,)));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: primaryColor,
-                    textStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                    ),
-                  ),
-                )),*/
-            // Container(
-            //   width: sizeWidth(context),
-            //   margin: EdgeInsets.only(left: btnmargsize,right:btnmargsize ),
-            //   color: Colors.red,
-            //   child: ElevatedButton(
-            //       onPressed: (){
-            //         print("access --------------------------loc");
-            //         print(longitude);
-            //         print(latitude);
-            //         // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => GoogleMapPg(longitude,latitude)));
-            //
-            //         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => CustomemapPage()));
-            //
-            //       },
-            //       child: Text("Find Mechanic",style: TextStyle(fontSize: 18),
-            //       ) ),
-            // ),
-            SizedBox(
-              height: 1,
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
             ),
-            Divider(
-              height: 0.1,
-              thickness: 1,
-              color: Colors.black,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-
-            //   Container(
-            //     height: 400,
-            //     color: Colors.blue,
-            //     child: Align(
-            //         alignment: Alignment.bottomCenter,
-            //         child: Text("Map",style: TextStyle(fontSize: 32),)),
-            //   )
-            // new Center(
-            //     child:new
-            //     Text('Yahn per mechanic ko dekhne k lye geo locator chahye',style: TextStyle(
-            //
-            //
-            //       fontSize: 50.0,
-            //       color: Colors.green
-            //     ),),
-            //
-            //
-            // ),
-          ],
+          ),
         ),
       ),
     );

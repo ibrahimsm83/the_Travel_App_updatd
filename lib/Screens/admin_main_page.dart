@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:travelapp/Screens/admin_home_page.dart';
+import 'package:travelapp/Screens/admin_ride_history.dart';
 import 'package:travelapp/Screens/admin_users.dart';
 import 'package:travelapp/Screens/event_seat_screen.dart';
 import 'package:travelapp/Sharing/findsharedrides.dart';
-
 
 class AdminMainPage extends StatefulWidget {
   const AdminMainPage({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class _AdminMainPageState extends State<AdminMainPage> {
                 child: Row(
                   children: [
                     Text(
-                      "The Travel App",
+                      "Fare Share",
                       style: TextStyle(
                         fontFamily: 'Montserrat',
                         color: Colors.white,
@@ -81,7 +81,8 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
@@ -99,11 +100,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                 );
                                               },
                                               child: Container(
-                                                height: 150.0,
+                                                height: 100.0,
                                                 width: 130.0,
-                                                decoration: const BoxDecoration(
-                                                    
-                                                     color: Colors.black,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.grey[800],
                                                     // gradient: LinearGradient(
                                                     //     colors: [
                                                     //       Color(0xFF8ab0e6),
@@ -120,7 +120,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                   
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.all(
@@ -133,8 +132,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                             fontSize: 20.0,
                                                             color: Colors.white,
                                                             fontWeight:
-                                                                FontWeight.w600),
-                                                        textAlign: TextAlign.left,
+                                                                FontWeight
+                                                                    .w600),
+                                                        textAlign:
+                                                            TextAlign.left,
                                                         overflow:
                                                             TextOverflow.fade,
                                                         maxLines: 2,
@@ -165,11 +166,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                 );
                                               },
                                               child: Container(
-                                                height: 150.0,
+                                                height: 100.0,
                                                 width: 130.0,
                                                 decoration: BoxDecoration(
-                                                     color: Colors.black,
-                                                    
+                                                    color: Colors.grey[800],
                                                     borderRadius:
                                                         BorderRadius.all(
                                                             Radius.circular(
@@ -178,7 +178,6 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.center,
                                                   children: [
-                                                    
                                                     Padding(
                                                       padding:
                                                           const EdgeInsets.all(
@@ -191,8 +190,10 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                                             fontSize: 20.0,
                                                             fontWeight:
                                                                 FontWeight.w600,
-                                                            color: Colors.white),
-                                                        textAlign: TextAlign.left,
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.left,
                                                         overflow:
                                                             TextOverflow.fade,
                                                         maxLines: 2,
@@ -207,8 +208,49 @@ class _AdminMainPageState extends State<AdminMainPage> {
                                         ),
                                       ],
                                     ),
-                                    
                                   ],
+                                ),
+                                SizedBox(height: 20,),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => AdminRideHistoryPage()
+                                          //  PolyLinePointPage()
+                                          //MapSample(),
+                                          ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 100.0,
+                                    width: 270.0,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[800],
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0))),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            "Ride History",
+                                            style: TextStyle(
+                                                fontFamily: 'Montserrat',
+                                                fontSize: 20.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                            textAlign: TextAlign.left,
+                                            overflow: TextOverflow.fade,
+                                            maxLines: 2,
+                                            softWrap: false,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),

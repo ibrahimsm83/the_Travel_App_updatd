@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:travelapp/Driver/driver_main_page.dart';
+import 'package:travelapp/Screens/driver_options.dart';
 import 'package:travelapp/Screens/forget_password.dart';
 import 'package:travelapp/Screens/main_screen.dart';
 import 'package:travelapp/Screens/signup_driver_screen.dart';
@@ -88,7 +89,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
       height: MediaQuery.of(context).size.height,
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage("$imgpath/signupsocialmedia.png"),
+          image: AssetImage("$imgpath/carbackground.png"),
           fit: BoxFit.cover,
         ),
       ),
@@ -102,7 +103,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                 child: IconButton(
                   icon: Icon(
                     Icons.arrow_back_ios_rounded,
-                    color: Colors.white,
+                    color: Colors.teal,
                     size: 30.0,
                   ),
                   onPressed: () {
@@ -113,16 +114,6 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                   },
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: sizeheight(context) * 0.05),
-                child: Text("The Travel App",
-                    style: TextStyle(
-                        fontSize: 30.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal)),
-              ),
-              SizedBox(height: 20),
-              Divider(height: 5, thickness: 1, color: Colors.white),
               SizedBox(height: sizeheight(context) * 0.10),
               Container(
                 child: Column(
@@ -130,64 +121,70 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                     Text(
                       'For Driver',
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.teal,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
-                      height: 40.0,
+                      height: 30.0,
                     ),
                     Container(
                       child: Form(
                         key: _formkey,
                         child: Column(
                           children: <Widget>[
-                            Container(
-                              color: Colors.white,
-                              child: TextFormField(
-                                  // ignore: missing_return
-                                  // validator: (input) {
-                                  //   if (input.isEmpty) return 'Enter Email';
-                                  // },
-                                  validator: (input) {
-                                    if (input == null) return 'Enter Email';
-                                  },
-                                  controller: _emailController,
-                                  decoration: InputDecoration(
-                                      labelText: 'Email',
-                                      prefixIcon: Icon(Icons.email)),
-                                  onSaved: (input) => _email = input),
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: TextFormField(
+                                    // ignore: missing_return
+                                    // validator: (input) {
+                                    //   if (input.isEmpty) return 'Enter Email';
+                                    // },
+                                    validator: (input) {
+                                      if (input == null) return 'Enter Email';
+                                    },
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                        labelText: 'Email',
+                                        prefixIcon: Icon(Icons.email)),
+                                    onSaved: (input) => _email = input),
+                              ),
                             ),
                             SizedBox(
                               height: 20.0,
                             ),
-                            Container(
-                              color: Colors.white,
-                              child: TextFormField(
-                                controller: _passwordController,
-                                obscureText: obscureText,
-                                decoration: InputDecoration(
-                                    labelText: 'Password',
-                                    prefixIcon: Icon(Icons.lock),
-                                    suffixIcon: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            obscureText = !obscureText;
-                                          });
-                                        },
-                                        child: obscureText
-                                            ? const Icon(
-                                                Icons.visibility_off,
-                                                color: Colors.grey,
-                                              )
-                                            : const Icon(
-                                                Icons.visibility,
-                                                color: Colors.black,
-                                              ))),
-                                //obscureText: true,
-                                validator: (input) {
-                                  if (input == null) return 'Enter Password';
-                                },
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Container(
+                                color: Colors.white,
+                                child: TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: obscureText,
+                                  decoration: InputDecoration(
+                                      labelText: 'Password',
+                                      prefixIcon: Icon(Icons.lock),
+                                      suffixIcon: GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              obscureText = !obscureText;
+                                            });
+                                          },
+                                          child: obscureText
+                                              ? const Icon(
+                                                  Icons.visibility_off,
+                                                  color: Colors.grey,
+                                                )
+                                              : const Icon(
+                                                  Icons.visibility,
+                                                  color: Colors.black,
+                                                ))),
+                                  //obscureText: true,
+                                  validator: (input) {
+                                    if (input == null) return 'Enter Password';
+                                  },
+                                ),
                               ),
                             ),
                             SizedBox(height: 10),
@@ -198,7 +195,8 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                 GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => forgotpassword()),);
+                                         Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => ForgetPasswordScreen()));
                                     });
                                   },
                                   child: Container(
@@ -210,22 +208,25 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                           style: TextStyle(
                                               fontSize: 18,
                                               color: Colors
-                                                  .white //Color(0xFF267D43)
+                                                  .black //Color(0xFF267D43)
                                               ),
                                         ),
                                         onPressed: () {
-                                          if (_formkey.currentState!
-                                              .validate()) {
-                                            // login(emailController.text, password.text);
-                                            print("Driver login");
-                                            _signInWithEmailAndPassword();
-                                            // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                                            //     builder: (BuildContext context) => UserDeshboardScreen()));
-                                            // Navigator.of(context)
-                                            //     .push(MaterialPageRoute(builder: (_) => UserDeshboardScreen()));
-                                          } else {
-                                            print('Validation error');
-                                          }
+                                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (_) => ForgetPasswordScreen()));
+                                    
+                                          // if (_formkey.currentState!
+                                          //     .validate()) {
+                                          //   // login(emailController.text, password.text);
+                                          //   print("Driver login");
+                                          //   _signInWithEmailAndPassword();
+                                          //   // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                                          //   //     builder: (BuildContext context) => UserDeshboardScreen()));
+                                          //   // Navigator.of(context)
+                                          //   //     .push(MaterialPageRoute(builder: (_) => UserDeshboardScreen()));
+                                          // } else {
+                                          //   print('Validation error');
+                                          // }
                                         },
                                       )),
                                 ),
@@ -275,13 +276,13 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                 text: TextSpan(
                                   text: "Don't Have an Account? ",
                                   style: const TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.black, fontSize: 16),
                                   children: <TextSpan>[
                                     TextSpan(
                                       text: ('Sign Up'),
                                       style: const TextStyle(
                                           decoration: TextDecoration.underline,
-                                          color: Colors.orange,
+                                          color: Colors.teal,
                                           fontSize: 18),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
@@ -290,7 +291,7 @@ class _DriverLoginPageState extends State<DriverLoginPage> {
                                               MaterialPageRoute(
                                                   builder:
                                                       (BuildContext context) =>
-                                                          SignUpDriverPage()));
+                                                          DriverOptions()));
                                         },
                                     )
                                   ],

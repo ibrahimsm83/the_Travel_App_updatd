@@ -22,7 +22,7 @@ class _EventsReserveSeatsPageState extends State<EventsReserveSeatsPage> {
 
   final formKey = GlobalKey<FormState>();
 
-  var kGoogleApiKey = "AIzaSyBW5iOvTYmTq9B77_bB_lHL1xsA1qT5u2Y";
+  var kGoogleApiKey = "AIzaSyDHZomR5ozaTualggVoaq5Z2fZIFC_03eQ";
   double _originLatitude = 0.0, _originLongitude = 0.0;
   double _destLatitude = 0.0, _destLongitude = 0.0;
   double? _height;

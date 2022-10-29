@@ -5,6 +5,9 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 //Mechanic
 final CollectionReference _mainCollection = _firestore.collection('Drivers');
 
+final CollectionReference _mainSharingCollection =
+    _firestore.collection('SharingDriver');
+
 class Database {
   static String? userUid;
   static String? phono;
@@ -16,6 +19,7 @@ class Database {
       String? Email,
       String? password,
       String? services,
+      String? carno,
       int? seats,
       String? servicetype,
       double? latitude,
@@ -31,6 +35,7 @@ class Database {
       "city": city,
       "address": address,
       "services": services,
+      "carno": carno,
       "Email": Email,
       "password": password,
       "totalseats": seats,
@@ -46,6 +51,65 @@ class Database {
         .catchError((e) => print(e));
 
     await _mainCollection
+        .doc(phono)
+        .collection('tokens')
+        .doc(token)
+        .set({"tokens": token});
+  }
+
+  static Future<void> addSharingDriverDetails(
+      {String? name,
+      String? phono,
+      String? city,
+      String? pickupaddress,
+      String? dropoffaddress,
+      String? Email,
+      String? password,
+      String? services,
+      String? carno,
+      double? latitude,
+      double? longitude,
+      int? seats,
+      double? orgnlat,
+      double? orgnlong,
+      double? destlat,
+      double? destlong,
+      String? token,
+      double? calculatedPrice,
+      int? divisionValue,
+      }) async {
+    // DocumentReference documentReferencer =
+    // _mainCollection.doc(phono).collection('Data').doc();
+    DocumentReference documentReferencer = _mainSharingCollection.doc(phono);
+
+    Map<String, dynamic> data = <String, dynamic>{
+      "name": name,
+      "phoneno": phono,
+      "city": city,
+      "pickupaddress": pickupaddress,
+      "dropoffaddress": dropoffaddress,
+      "services": services,
+      "carno": carno,
+      "Email": Email,
+      "password": password,
+      "latitude": latitude,
+      "longitude": longitude,
+      "seats": seats,
+      "orgnlat": orgnlat,
+      "orgnlong": orgnlong,
+      "destlat": destlat,
+      "destlong": destlong,
+      "calculatedPrice": calculatedPrice,
+      "divisionValue": divisionValue,
+      //"token": token,
+    };
+//add data
+    await documentReferencer
+        .set(data)
+        .whenComplete(() => print("Note item added to the database"))
+        .catchError((e) => print(e));
+
+    await _mainSharingCollection
         .doc(phono)
         .collection('tokens')
         .doc(token)
@@ -147,6 +211,7 @@ class Database {
         .whenComplete(() => print("Note item added to the database"))
         .catchError((e) => print(e));
   }
+
 //end Booking data
 //add Event Ride data
   static Future<void> addEventCityReserveSeat(
@@ -180,10 +245,12 @@ class Database {
       "flag": true
     };
 //add data
-    await documentReferencer.add(data)
+    await documentReferencer
+        .add(data)
         .whenComplete(() => print("Note item added to the database"))
         .catchError((e) => print(e));
   }
+
 //end Event data
   //add user details
   static Future<void> adduserdata(
@@ -249,6 +316,13 @@ class Database {
   static Stream<QuerySnapshot> readDriverData() {
     //CollectionReference notesItemCollection = _mainCollection.doc(userUid).collection('items');
     CollectionReference notesItemCollection = _mainCollection;
+
+    return notesItemCollection.snapshots();
+  }
+
+  static Stream<QuerySnapshot> readSharingDriverData() {
+    //CollectionReference notesItemCollection = _mainCollection.doc(userUid).collection('items');
+    CollectionReference notesItemCollection = _mainSharingCollection;
 
     return notesItemCollection.snapshots();
   }

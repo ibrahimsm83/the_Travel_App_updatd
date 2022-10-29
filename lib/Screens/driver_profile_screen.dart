@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'package:travelapp/Driver/driver_main_page.dart';
 import 'package:travelapp/Driver/driver_main_page1.dart';
 import 'package:travelapp/Screens/main_screen.dart';
+import 'package:travelapp/Screens/update_ride_info.dart';
 import 'package:travelapp/Utils/constants.dart';
 import 'package:travelapp/services/database_helper.dart';
 import 'package:travelapp/services/local_push_notification.dart';
@@ -676,26 +677,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                 children: [
                                   new ListTile(
                                     title: new Text(
-                                      'Profile',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    trailing: new Icon(Icons.account_box),
-                                  ),
-                                  new ListTile(
-                                    title: new Text(
-                                      'Help',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'Montserrat',
-                                      ),
-                                    ),
-                                    trailing: new Icon(Icons.help),
-                                  ),
-                                  new ListTile(
-                                    title: new Text(
                                       'Sign out',
                                       style: TextStyle(
                                         color: Colors.black,
@@ -758,7 +739,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      text: 'Travel App ',
+                      text: 'Fare Share ',
                       style: TextStyle(
                         fontSize: 30.0,
                         fontWeight: FontWeight.bold,
@@ -768,7 +749,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 150.0),
+            SizedBox(height: 10.0),
             Container(
               //color: Colors.amber,
               //height: 150,
@@ -803,83 +784,100 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
             ),
 
             SizedBox(height: 20),
+            SizedBox(
+              height: 40,
+              width: 170,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => UpdateRideInfo()
+                    )
+                  );
+                },
+                child: Text("Update Ride Info"),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.grey[800]),
+                ),
+              ),
+            ),
 
-            SizedBox(height: 10.0),
+            //SizedBox(height: 10.0),
             // Text(
             //   'Driver at your spot',
             //   style: TextStyle(color: Colors.black),
             // ),
-            SizedBox(
-              height: 10,
-            ),
-            Divider(
-              height: 5,
-              thickness: 1,
-              color: Colors.black,
-            ),
+            // SizedBox(
+            //   height: 10,
+            // ),
+            // Divider(
+            //   height: 5,
+            //   thickness: 1,
+            //   color: Colors.black,
+            // ),
 
-            SizedBox(height: 30.0),
+            // SizedBox(height: 30.0),
 
-            SizedBox(height: 10.0),
+            // SizedBox(height: 10.0),
             //Login Buttons
-            Container(
-                width: sizeWidth(context),
-                margin: EdgeInsets.only(left: btnmargsize, right: btnmargsize),
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                ),
-                child: ElevatedButton(
-                  child: Text(
-                    "Find Trips",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_originLatitude == 0.0 && _destLongitude == 0.0) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Something Wrong"),
-                        duration: Duration(seconds: 2),
-                      ));
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DriverMapPage(
-                            originLatitude: _originLatitude,
-                            originLongitude: _originLongitude,
-                            destLatitude: _destLatitude,
-                            destLongitude: _destLongitude,
-                            source: from,
-                            destination: destination,
-                            totalPrice: totalPrice,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.grey[800],
-                    textStyle:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(10.0),
-                    ),
-                  ),
-                )),
+            // Container(
+            //     width: sizeWidth(context),
+            //     margin: EdgeInsets.only(left: btnmargsize, right: btnmargsize),
+            //     height: 45,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.all(Radius.circular(30.0)),
+            //     ),
+            //     child: ElevatedButton(
+            //       child: Text(
+            //         "Find Trips",
+            //         style: TextStyle(
+            //           fontSize: 20.0,
+            //           fontWeight: FontWeight.w300,
+            //           color: Colors.white,
+            //           fontFamily: 'Montserrat',
+            //         ),
+            //       ),
+            //       onPressed: () {
+            //         if (_originLatitude == 0.0 && _destLongitude == 0.0) {
+            //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //             content: Text("Something Wrong"),
+            //             duration: Duration(seconds: 2),
+            //           ));
+            //         } else {
+            //           Navigator.push(
+            //             context,
+            //             MaterialPageRoute(
+            //               builder: (context) => DriverMapPage(
+            //                 originLatitude: _originLatitude,
+            //                 originLongitude: _originLongitude,
+            //                 destLatitude: _destLatitude,
+            //                 destLongitude: _destLongitude,
+            //                 source: from,
+            //                 destination: destination,
+            //                 totalPrice: totalPrice,
+            //               ),
+            //             ),
+            //           );
+            //         }
+            //       },
+            //       style: ElevatedButton.styleFrom(
+            //         primary: Colors.grey[800],
+            //         textStyle:
+            //             TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            //         shape: new RoundedRectangleBorder(
+            //           borderRadius: new BorderRadius.circular(10.0),
+            //         ),
+            //       ),
+            //     )),
 
-            SizedBox(
-              height: 50,
-            ),
-            Divider(
-              height: 5,
-              thickness: 1,
-              color: Colors.black,
-            ),
+            // SizedBox(
+            //   height: 50,
+            // ),
+            // Divider(
+            //   height: 5,
+            //   thickness: 1,
+            //   color: Colors.black,
+            // ),
           ],
         ),
       ),
